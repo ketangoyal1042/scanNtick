@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
+import { registerUser } from "../../api/auth";
+import { toast } from "react-toastify";
 
 const register = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    name: "",
+    phone: "",
+    password: "",
+    repeatPassword: "",
+  });
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value,
+    }));
+    console.log(formData);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Form Data Submitted:", formData);
+    try {
+      registerUser(formData).then((response) => {
+        console.log("User registered successfully:", response);
+        toast(response?.message);
+      })
+    } catch (error) {
+        toast("Something went wrong. Please try again.");
+    }
+  };
+
   return (
     <>
-      <form className="max-w-sm mx-auto">
+      <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
         <div className="mb-5">
           <label
             htmlFor="email"
@@ -14,6 +47,8 @@ const register = () => {
           <input
             type="email"
             id="email"
+            value={formData.email}
+            onChange={handleChange}
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             placeholder="name@flowbite.com"
             required
@@ -29,6 +64,8 @@ const register = () => {
           <input
             type="text"
             id="name"
+            value={formData.name}
+            onChange={handleChange}
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
           />
@@ -41,8 +78,10 @@ const register = () => {
             Your Phone Number
           </label>
           <input
-            type="number"
-            id="number"
+            type="text"
+            id="phone"
+            value={formData.phoneNumber}
+            onChange={handleChange}
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
           />
@@ -57,6 +96,8 @@ const register = () => {
           <input
             type="password"
             id="password"
+            value={formData.password}
+            onChange={handleChange}
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
           />
@@ -70,7 +111,9 @@ const register = () => {
           </label>
           <input
             type="password"
-            id="repeat-password"
+            id="repeatPassword"
+            value={formData.repeatPassword}
+            onChange={handleChange}
             className="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 dark:shadow-sm-light"
             required
           />
