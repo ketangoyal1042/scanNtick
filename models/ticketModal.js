@@ -9,6 +9,10 @@ const ticketSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  eventId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event",
+  },
   qrCodes: [
     {
       type: mongoose.Schema.Types.ObjectId,

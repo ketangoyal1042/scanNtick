@@ -35,7 +35,7 @@ const register = () => {
   };
 
   return (
-    <>
+    <section className="bg-gray-50 mt-12">
       <form className="max-w-sm mx-auto" onSubmit={handleSubmit}>
         <div className="mb-5">
           <label
@@ -126,7 +126,7 @@ const register = () => {
           Register new account
         </button>
       </form>
-    </>
+    </section>
   );
 };
 

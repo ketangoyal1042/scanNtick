@@ -13,12 +13,12 @@ const login = () => {
     password: "",
   });
 
-  // const token = useSelector((state) => state.auth.token);
-  // useEffect(() => {
-  //   if (token) {
-  //     router.push('/home');
-  //   }
-  // }, [token, router]);
+  const token = useSelector((state) => state.auth.token);
+  useEffect(() => {
+    if (token) {
+      router.push('/dashboard');
+    }
+  }, [token, router]);
 
    const handleChange = (e) => {
     const { id, value } = e.target;

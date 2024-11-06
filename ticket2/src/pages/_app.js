@@ -10,7 +10,7 @@ export default function App({ Component, pageProps }) {
     <>
       <Provider store={store}>
         <NavigationBar />
-        <div className="pt-20">
+        <div className="pt-[26px]">
           {/* Adjust this value to match the height of your nav */}
           <ToastContainer />
           <Component {...pageProps} />

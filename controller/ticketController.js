@@ -4,8 +4,13 @@ import QrModal from "../models/QrModal.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const ticketGeneratorContoller = async (req, res) => {
-  const { userId, mobileNumber, n } = req.body;
-  if (!mobileNumber || !n || typeof n !== "number" || n <= 0) {
+  const { mobileNumber, quantity, eventId } = req.body;
+  if (
+    !mobileNumber ||
+    !quantity ||
+    typeof quantity !== "number" ||
+    quantity <= 0
+  ) {
     return res.status(400).json({
       message:
         "Please provide a valid, 'mobileNumber', and a positive integer 'n' (number of QR codes).",
@@ -13,9 +18,9 @@ export const ticketGeneratorContoller = async (req, res) => {
   }
   try {
     const qrCodes = [];
-    for (let i = 1; i <= n; i++) {
+    for (let i = 1; i <= quantity; i++) {
       const codeId = uuidv4();
-      const qrCodeUrl = `http://192.168.31.126:5000/api/v1/ticket/scan?codeId=${codeId}`;
+      const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}`;
       // const qrCodeId = `qr-${mobileNumber}-${i}`;
       const qrCodeDataUrl = await QRcode.toDataURL(qrCodeUrl);
       const qr = new QrModal({
@@ -32,10 +37,11 @@ export const ticketGeneratorContoller = async (req, res) => {
       userId: req.user._id,
       phoneNumber: mobileNumber,
       qrCodes: qrCodes,
+      eventId: eventId,
     });
     await ticket.save();
     res.status(200).json({
-      message: `${n} QR codes generated and ticket created successfully`,
+      message: `${quantity} QR codes generated and ticket created successfully`,
       ticket: {
         id: ticket._id,
         // userId: ticket.userId,

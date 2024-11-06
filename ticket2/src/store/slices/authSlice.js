@@ -4,7 +4,7 @@ import { getFromLocalStorage, removeFromLocalStorage, saveToLocalStorage } from 
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    user: getFromLocalStorage('authData') || {},
+    user: getFromLocalStorage('authData') || null,
     token: getFromLocalStorage('authToken') || null,
   },
   reducers: {
