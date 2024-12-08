@@ -1,4 +1,5 @@
 import eventModal from "../models/eventModal.js";
+import ticketModal from "../models/ticketModal.js";
 
 export const eventRegisterController = async (req, res) => {
   const { title, description } = req.body;
@@ -41,5 +42,14 @@ export const eventListController = async (req, res) => {
   res.status(200).send({
     success: true,
     events,
+  });
+};
+
+export const eventListByNumberController = async (req, res) => {
+  const email = req.params.email
+  const eventList = await ticketModal.find({ email: email }).populate("eventId");
+  res.status(200).send({
+    success: true,
+    eventList,
   });
 };
