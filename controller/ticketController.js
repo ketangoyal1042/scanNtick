@@ -4,16 +4,17 @@ import QrModal from "../models/QrModal.js";
 import { v4 as uuidv4 } from "uuid";
 
 export const ticketGeneratorContoller = async (req, res) => {
-  const { mobileNumber, quantity, eventId } = req.body;
+  const { mobileNumber, email, quantity, eventId } = req.body;
   if (
     !mobileNumber ||
+    !email ||
     !quantity ||
     typeof quantity !== "number" ||
     quantity <= 0
   ) {
     return res.status(400).json({
       message:
-        "Please provide a valid, 'mobileNumber', and a positive integer 'n' (number of QR codes).",
+        "Please provide a valid, 'mobileNumber', 'email', and a positive integer 'n' (number of QR codes).",
     });
   }
   try {
@@ -34,8 +35,9 @@ export const ticketGeneratorContoller = async (req, res) => {
     // Create the ticket
     const ticket = new ticketModal({
       //   userId,
-      userId: req.user._id,
+      // userId: req.user._id,
       phoneNumber: mobileNumber,
+      email: email,
       qrCodes: qrCodes,
       eventId: eventId,
     });
@@ -46,6 +48,7 @@ export const ticketGeneratorContoller = async (req, res) => {
         id: ticket._id,
         // userId: ticket.userId,
         phoneNumber: ticket.phoneNumber,
+        email: ticket.email,
         qrCodes: ticket.qrCodes,
         createdAt: ticket.createdAt,
       },
