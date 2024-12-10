@@ -1,6 +1,9 @@
-import { comparePassword, hashedPassword } from "../helper/authHelper.js";
+import { comparePassword, hashedPassword, mailTransporter } from "../helper/authHelper.js";
 import userModal from "../models/userModal.js";
 import JWT from "jsonwebtoken";
+import bcrypt from 'bcrypt';
+import otpModal from "../models/otpModal.js";
+
 
 export const registerController = async (req, res) => {
   try {
@@ -95,3 +98,86 @@ export const loginContoller = async (req, res) => {
     });
   }
 };
+
+// Nodemailer transporter
+const transporter = mailTransporter();
+
+export const sendOtpContoller = async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ error: 'Email is required.' });
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  const hashedOtp = await bcrypt.hash(otp, 10);
+  const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+  try {
+    await new otpModal({
+      email,
+      otp: hashedOtp,
+      expiresAt
+    }).save();
+
+    const mailOptions = {
+      from: 'kushagragoyal1032@gmail.com',
+      to: email,
+      subject: 'Your OTP Code',
+      text: `Your OTP code is: ${otp}`,
+    };
+
+    transporter.sendMail(mailOptions, (error) => {
+      if (error) return res.status(500).json({ error: 'Failed to send OTP.' });
+      res.json({ message: 'OTP sent successfully.' });
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Database error.' });
+  }
+
+};
+
+export const verifyOtpContoller = async (req, res) => {
+  const { email, otp } = req.body;
+
+  if (!email || !otp) return res.status(400).json({
+    success: false,
+    error: 'Email and OTP are required.'
+  });
+
+  try {
+    const otpRecord = await otpModal.findOne({ email });
+    if (!otpRecord) return res.status(400).json({
+      success: false,
+      error: 'Invalid or expired OTP.'
+    });
+
+    const isMatch = await bcrypt.compare(otp, otpRecord.otp);
+    if (!isMatch) return res.status(400).json({
+      success: false,
+      error: 'Invalid OTP.'
+    });
+
+    // Check expiration
+    if (new Date(otpRecord.expiresAt) < new Date()) {
+      return res.status(400).json({
+        success: false,
+        error: 'OTP expired.'
+      });
+    }
+
+    // Clean up OTP
+    await otpModal.deleteOne({ email });
+    const token = JWT.sign({ email: email }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    res.json({
+      success: true,
+      message: 'Otp verified successfully',
+      verified: true,
+      token
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Database error.' });
+  }
+}
+
+
