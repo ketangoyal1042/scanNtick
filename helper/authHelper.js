@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import nodemailer from 'nodemailer';
 
 export const hashedPassword = async (password) => {
   try {
@@ -9,6 +10,18 @@ export const hashedPassword = async (password) => {
   }
 };
 
-export const comparePassword = async (password, hashedPassword)=>{
-    return await bcrypt.compare(password, hashedPassword);
+export const comparePassword = async (password, hashedPassword) => {
+  return await bcrypt.compare(password, hashedPassword);
+}
+
+export const mailTransporter = () => {
+  return nodemailer.createTransport({
+    // host: "smtp.ethereal.email",
+    // port: 587,
+    service: 'Gmail',
+    auth: {
+      user: 'kkgoyals1032@gmail.com',
+      pass: 'kalg kaux pxvf yplo',
+    },
+  })
 }
