@@ -45,11 +45,22 @@ export const eventListController = async (req, res) => {
   });
 };
 
-export const eventListByNumberController = async (req, res) => {
-  const email = req.params.email
-  const eventList = await ticketModal.find({ email: email }).populate("eventId");
-  res.status(200).send({
-    success: true,
-    eventList,
-  });
+
+export const eventListByEmailController = async (req, res) => {
+  try {
+    const { email } = req.visitor;
+    console.log("email: " + email);
+    const eventList = await ticketModal.find({ email: email }).populate("eventId");
+    res.status(200).send({
+      success: true,
+      eventList,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong",
+      error,
+    });
+  }
 };

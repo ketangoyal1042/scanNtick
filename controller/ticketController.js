@@ -21,7 +21,7 @@ export const ticketGeneratorContoller = async (req, res) => {
     const qrCodes = [];
     for (let i = 1; i <= quantity; i++) {
       const codeId = uuidv4();
-      const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}`;
+      const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}&eventId=${eventId}`;
       // const qrCodeId = `qr-${mobileNumber}-${i}`;
       const qrCodeDataUrl = await QRcode.toDataURL(qrCodeUrl);
       const qr = new QrModal({
@@ -49,6 +49,7 @@ export const ticketGeneratorContoller = async (req, res) => {
         // userId: ticket.userId,
         phoneNumber: ticket.phoneNumber,
         email: ticket.email,
+        eventId: ticket.eventId,
         qrCodes: ticket.qrCodes,
         createdAt: ticket.createdAt,
       },
@@ -64,7 +65,7 @@ export const ticketGeneratorContoller = async (req, res) => {
 };
 
 export const scanQrContoller = async (req, res) => {
-  const { codeId } = req.query;
+  const { codeId, eventId } = req.query;
   try {
     const qrCode = await QrModal.findOne({ qrCodeId: codeId });
     if (!qrCode) {
