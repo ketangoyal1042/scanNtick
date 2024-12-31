@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 
 const ticketSchema = new mongoose.Schema({
-  // userId: {
+  // associateId: [{
   //   type: mongoose.Schema.Types.ObjectId,
   //   ref: "User",
-  // },
+  // }],
   phoneNumber: {
     type: String,
     required: true,

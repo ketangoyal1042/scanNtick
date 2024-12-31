@@ -12,7 +12,7 @@ const eventSchema = new mongoose.Schema(
     },
     userId: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, // Utlizing User Array to associate event with multiple users
         ref: "User",
       },
     ],
