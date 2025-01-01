@@ -22,7 +22,6 @@ export const ticketGeneratorContoller = async (req, res) => {
     for (let i = 1; i <= quantity; i++) {
       const codeId = uuidv4();
       const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}&eventId=${eventId}`;
-      // const qrCodeId = `qr-${mobileNumber}-${i}`;
       const qrCodeDataUrl = await QRcode.toDataURL(qrCodeUrl);
       const qr = new QrModal({
         qrCodeId: codeId,
@@ -34,8 +33,7 @@ export const ticketGeneratorContoller = async (req, res) => {
 
     // Create the ticket
     const ticket = new ticketModal({
-      //   userId,
-      // userId: req.user._id,
+      // associateId: [req.user._id],
       phoneNumber: mobileNumber,
       email: email,
       qrCodes: qrCodes,
@@ -46,7 +44,6 @@ export const ticketGeneratorContoller = async (req, res) => {
       message: `${quantity} QR codes generated and ticket created successfully`,
       ticket: {
         id: ticket._id,
-        // userId: ticket.userId,
         phoneNumber: ticket.phoneNumber,
         email: ticket.email,
         eventId: ticket.eventId,
@@ -58,7 +55,7 @@ export const ticketGeneratorContoller = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Error accured in generating ticket",
+      message: "Something went wrong while generating ticket",
       error,
     });
   }
@@ -69,7 +66,7 @@ export const scanQrContoller = async (req, res) => {
   try {
     const qrCode = await QrModal.findOne({ qrCodeId: codeId });
     if (!qrCode) {
-      return res.status(404).json({ error: "QR Code not found" });
+      return res.status(404).json({ error: "QR Ticket Not Exists with Us" });
     }
 
     // Check if already scanned
