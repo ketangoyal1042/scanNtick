@@ -7,17 +7,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { getFromLocalStorage } from "../../utils/storage";
 
 const NavigationBar = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
+    if(token){
+      setIsLoggedIn(!!token);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [token])
+  
 
-  if (!isMounted) {
-    return null;
+  const handleLogout = () => {
+      dispatch(clearUser());
+      router.push("/");
   }
 
   return (
@@ -76,10 +81,7 @@ const NavigationBar = () => {
                 <a
                   href="#"
                   className="text-sm  text-blue-600 dark:text-blue-500 hover:underline"
-                  onClick={() => {
-                    dispatch(clearUser());
-                    router.push("/dashboard");
-                  }}
+                  onClick={handleLogout}
                 >
                   Logout
                 </a>
@@ -92,37 +94,38 @@ const NavigationBar = () => {
           id="navbar-sticky"
         >
           <ul className="flex flex-col p-4 md:p-0 mt-4 font-medium border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+          <li>
+              <Link
+                href="/"
+                className={`block py-2 px-3 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500  dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700 ${router.pathname === '/'? 'dark:text-blue-500' : 'dark:text-white'}`}
+              >
+                Home
+              </Link>
+            </li>
             <li>
               <Link
                 href="/dashboard"
-                className="block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500"
+                className={`block py-2 px-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0  ${router.pathname === '/dashboard'? 'dark:text-blue-500' : 'dark:text-white'}`}
                 aria-current="page"
               >
-                Dashbaord
+                Dashboard
               </Link>
             </li>
-            {/* <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                About
-              </a>
-            </li> */}
-            {/* <li>
-              <a
-                href="#"
-                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-              >
-                Services
-              </a>
-            </li> */}
+            
             <li>
               <a
                 href="#"
                 className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
               >
-                Contact
+                Manage Events
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+              >
+                Settings
               </a>
             </li>
           </ul>
