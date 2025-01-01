@@ -5,7 +5,7 @@ import { requireSignIn, verifiedVisitor } from '../middleware/authMiddleware.js'
 const router = express.Router();
 
 router.post('/registeration', requireSignIn, eventRegisterController);
-router.get('/EventList', requireSignIn, eventListController);
+router.get('/EventList/:limit', requireSignIn, eventListController);
 router.get('/EventList/:email', verifiedVisitor, eventListByEmailController);
 
 export default router;

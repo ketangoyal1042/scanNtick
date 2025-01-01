@@ -32,7 +32,6 @@ const TopFiveEvents = () => {
 
   return (
     <div className="">
-      <h1 className="m-5 p-3 font-bold text-3xl text-gray-800">5 Upcoming Events</h1>
       <Box sx={{ width: "100%" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {events.map((event) => (
