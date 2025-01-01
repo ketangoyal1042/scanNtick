@@ -1,3 +1,4 @@
+"use client";
 import WrapperModal from "@/components/common/WrapperModal";
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
@@ -18,9 +19,8 @@ const dashboard = () => {
           Create New Event
         </Button>
         <p className="mx-auto mt-2 max-w-lg text-balance text-center text-3xl font-semibold tracking-tight text-gray-950 sm:text-5xl">
-          Everything you need to deploy your app
+          
         </p>
-        <Button onClick={handleOpen}>Open modal</Button>
         <WrapperModal open={open} setOpen={setOpen}>
           <CreateEvent />
         </WrapperModal>
