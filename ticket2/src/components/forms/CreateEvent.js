@@ -11,8 +11,11 @@ import {
 
 import Grid from "@mui/material/Grid2";
 import { useSelector } from "react-redux";
+import { createEvent } from "../../../api/event";
+import { toast } from "react-toastify";
 
 const CreateEvent = () => {
+  const auth = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -20,7 +23,6 @@ const CreateEvent = () => {
     eventDate: "",
     headCapacity: "",
   });
-  const [isModalOpen, setModalOpen] = useState(false);
   const [responseMessage, setResponseMessage] = useState("");
   const [errors, setErrors] = useState({});
 
@@ -45,38 +47,23 @@ const CreateEvent = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      auth = useSelector((state) => state.auth);
-      if (token) {
-        const response = await fetch(
-          "http://localhost:5000/api/v1/event/registeration",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: auth.token,
-            },
-            body: JSON.stringify(formData),
-          }
-        );
-        if (!response.ok) {
-          console.log("Error creating event", response);
-          alert("Failed to create event");
+      if (auth.token) {
+        let response = await createEvent(formData);
+        console.log("response: " + response.success);
+
+        if (!response.success) {
+          console.log("Error creating event", response.success);
         }
-        const data = await response.json();
         setResponseMessage("Event created successfully!");
-        setModalOpen(true);
+        toast(responseMessage);
       }
     } catch (error) {
       setResponseMessage("Failed to create event. Please try again.");
-      setModalOpen(true);
+      toast(responseMessage);
+      console.log(error);
     }
   };
 
-  const handleCloseModal = () => {
-    setModalOpen(false);
-  };
-
-  console.log(formData);
 
   return (
     <div>
@@ -175,35 +162,6 @@ const CreateEvent = () => {
             </Grid>
           </form>
         </Box>
-        {/* Modal Component */}
-        <Modal open={isModalOpen} onClose={handleCloseModal}>
-          <Box
-            sx={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              bgcolor: "background.paper",
-              boxShadow: 24,
-              p: 4,
-              borderRadius: 2,
-              width: 300,
-            }}
-          >
-            <Typography variant="h6" component="h2">
-              {responseMessage.includes("successfully") ? "Success" : "Error"}
-            </Typography>
-            <Typography sx={{ mt: 2 }}>{responseMessage}</Typography>
-            <Button
-              onClick={handleCloseModal}
-              variant="contained"
-              color="secondary"
-              sx={{ mt: 2 }}
-            >
-              Close
-            </Button>
-          </Box>
-        </Modal>
       </Container>
     </div>
   );

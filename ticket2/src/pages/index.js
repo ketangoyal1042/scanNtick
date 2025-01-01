@@ -1,5 +1,6 @@
 import Image from "next/image";
 import localFont from "next/font/local";
+import HomePage from "@/components/HomePage";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -111,6 +112,6 @@ export default function Home() {
     //     </a>
     //   </footer>
     // </div>
-    <div></div>
+    <HomePage />
   );
 }

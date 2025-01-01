@@ -38,7 +38,14 @@ export const eventRegisterController = async (req, res) => {
 
 export const eventListController = async (req, res) => {
   const userId = req.user._id;
-  const events = await eventModal.find({ userId }).select("-userId");
+  const limit = req.params.limit;
+  let events;
+  if (limit == 0) {
+    events = await eventModal.find({ userId }).select("-userId");
+  }
+  else {
+    events = await eventModal.find({ userId }).select("-userId").limit(limit);
+  }
   res.status(200).send({
     success: true,
     events,
