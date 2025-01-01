@@ -46,6 +46,7 @@ export const ticketGeneratorContoller = async (req, res) => {
         id: ticket._id,
         phoneNumber: ticket.phoneNumber,
         email: ticket.email,
+        eventId: ticket.eventId,
         qrCodes: ticket.qrCodes,
         createdAt: ticket.createdAt,
       },

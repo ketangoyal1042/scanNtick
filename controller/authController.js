@@ -138,12 +138,12 @@ export const sendOtpContoller = async (req, res) => {
 export const verifyOtpContoller = async (req, res) => {
   const { email, otp } = req.body;
 
-  if (!email || !otp) return res.status(400).json({
-    success: false,
-    error: 'Email and OTP are required.'
-  });
-
   try {
+    if (!email || !otp) return res.status(400).json({
+      success: false,
+      error: 'Email and OTP are required.'
+    });
+
     const otpRecord = await otpModal.findOne({ email });
     if (!otpRecord) return res.status(400).json({
       success: false,
@@ -166,8 +166,9 @@ export const verifyOtpContoller = async (req, res) => {
 
     // Clean up OTP
     await otpModal.deleteOne({ email });
+    // create token
     const token = JWT.sign({ email: email }, process.env.JWT_SECRET, {
-      expiresIn: "1d",
+      expiresIn: "7d",
     });
     res.json({
       success: true,
