@@ -157,7 +157,7 @@ const NavigationBar = () => {
             >
               Dashboard
             </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">
+            <Link href="/manage-events" className="text-gray-600 hover:text-gray-900">
               Manage Events
             </Link>
             <a href="#" className="text-gray-600 hover:text-gray-900">

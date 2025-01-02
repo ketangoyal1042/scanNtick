@@ -20,7 +20,7 @@ const CreateEvent = () => {
     title: "",
     description: "",
     eventVenue: "",
-    eventDate: "",
+    eventDateTime: "",
     headCapacity: "",
   });
   const [responseMessage, setResponseMessage] = useState("");
@@ -31,7 +31,8 @@ const CreateEvent = () => {
     if (!formData.title) newerr.title = "Title is required";
     if (!formData.description) newerr.description = "Description is required";
     if (!formData.eventVenue) newerr.eventVenue = "Event venue is required";
-    if (!formData.eventDate) newerr.eventDate = "Event date is required";
+    if (!formData.eventDateTime)
+      newerr.eventDateTime = "Event date is required";
     if (!formData.headCapacity)
       newerr.headCapacity = "Head capacity is required";
     setErrors(newerr);
@@ -48,18 +49,20 @@ const CreateEvent = () => {
     if (!validateForm()) return;
     try {
       if (auth.token) {
-        let response = await createEvent(formData);
-        console.log("response: " + response.success);
-
+        // Convert eventDateTime to IST
+        const utcDate = new Date(formData.eventDateTime);
+        const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
+        const istDate = new Date(utcDate.getTime() + istOffset).toISOString();
+        const updatedFormData = { ...formData, eventDateTime: istDate };
+        let response = await createEvent(updatedFormData);
         if (!response.success) {
           console.log("Error creating event", response.success);
         }
-        setResponseMessage("Event created successfully!");
-        toast(responseMessage);
+        toast(response?.message);
       }
+      handleCloseModal();
     } catch (error) {
-      setResponseMessage("Failed to create event. Please try again.");
-      toast(responseMessage);
+      toast("Failed to create event. Please try again.");
       console.log(error);
     }
   };
@@ -67,7 +70,6 @@ const CreateEvent = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
 
   return (
     <div>
@@ -109,13 +111,13 @@ const CreateEvent = () => {
                 <TextField
                   fullWidth
                   label="Event Date"
-                  name="eventDate"
-                  type="date"
-                  value={formData.eventDate}
+                  name="eventDateTime"
+                  type="datetime-local"
+                  value={formData.eventDateTime}
                   onChange={handleChange}
                   className={styles.textField}
-                  error={!!errors.eventDate}
-                  helperText={errors.eventDate}
+                  error={!!errors.eventDateTime}
+                  helperText={errors.eventDateTime}
                   InputLabelProps={{
                     shrink: true,
                   }}

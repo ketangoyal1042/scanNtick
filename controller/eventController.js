@@ -2,7 +2,7 @@ import eventModal from "../models/eventModal.js";
 import ticketModal from "../models/ticketModal.js";
 
 export const eventRegisterController = async (req, res) => {
-  const { title, description } = req.body;
+  const { title, description, headCapacity, eventDateTime } = req.body;
   const userId = req.user._id;
   try {
     if (!title) {
@@ -10,6 +10,12 @@ export const eventRegisterController = async (req, res) => {
     }
     if (!description) {
       return res.send({ message: "Description is required" });
+    }
+    if (!headCapacity) {
+      return res.send({ message: "HeadCapacity is required" });
+    }
+    if (!eventDateTime) {
+      return res.send({ message: "eventDateTime is required" });
     }
     if (userId && userId.length === 0) {
       return res.status(500).send({
@@ -21,6 +27,8 @@ export const eventRegisterController = async (req, res) => {
       title,
       description,
       userId,
+      headCapacity,
+      eventDateTime: new Date(eventDateTime),
     }).save();
 
     res
