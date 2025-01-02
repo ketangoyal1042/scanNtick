@@ -8,6 +8,7 @@ import { getAllEvents } from "../../api/event";
 import UpcomingEventList from "@/components/events/UpcomingEventList";
 import WrapperModal from "@/components/common/WrapperModal";
 import CreateEvent from "@/components/forms/CreateEvent";
+import PastEventList from "@/components/events/PastEventList";
 
 const ManageEvent = () => {
   const tabsRef = useRef(null);
@@ -24,7 +25,7 @@ const ManageEvent = () => {
     } catch (error) {
       toast.error(
         error.message ||
-          "Something went wrong fetching the Events. Please try again."
+        "Something went wrong fetching the Events. Please try again."
       );
     }
   };
@@ -51,12 +52,7 @@ const ManageEvent = () => {
             <UpcomingEventList />
           </Tabs.Item>
           <Tabs.Item title={<span className="text-purple-600 font-bold">Past</span>} icon={MdDashboard} className="mx-5">
-            <div className="mx-40">
-              This is{" "}
-              <span className="font-medium text-gray-800 dark:text-white">
-                Dashboard tab's associated content
-              </span>
-            </div>
+            <PastEventList />
           </Tabs.Item>
         </Tabs>
       </div>

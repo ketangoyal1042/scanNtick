@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import { topUpcomingEvents } from "../../api/event";
+import { getEventsData } from "../../api/event";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid2";
 import { toast } from "react-toastify";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Button from "@mui/material/Button";
@@ -17,7 +16,7 @@ const TopFiveEvents = () => {
   const [events, setEvents] = React.useState([]);
   const getEvents = async () => {
     try {
-      const response = await topUpcomingEvents(5);
+      const response = await getEventsData({ limit: 5 });
       if (response.success) {
         setEvents(response.events);
       }
