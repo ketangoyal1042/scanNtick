@@ -46,17 +46,26 @@ export const eventRegisterController = async (req, res) => {
 
 export const eventListController = async (req, res) => {
   const userId = req.user._id;
-  const limit = req.params.limit;
-  let events;
-  if (limit == 0) {
-    events = await eventModal.find({ userId }).select("-userId");
+  const limit = req.query.limit;
+  const event_type = req.query.event_type;
+  let query = { userId };
+  if (event_type === 'past') {
+    query.eventDateTime = { $lt: new Date() };
+  } else if (event_type === 'upcoming') {
+    query.eventDateTime = { $gte: new Date() };
   }
-  else {
-    events = await eventModal.find({ userId }).select("-userId").limit(limit);
+
+  // Execute the query
+  let events = eventModal.find(query).select("-userId");
+  if (limit > 0) {
+    events = events.limit(limit);
   }
+
+  // Fetch the events
+  const result = await events;
   res.status(200).send({
     success: true,
-    events,
+    events: result,
   });
 };
 
