@@ -8,6 +8,7 @@ import { Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import TicketGenerate from "@/components/forms/TicketGenerate";
 import { getAllEvents } from "../../api/event";
+import { toast } from "react-toastify";
 
 const dashboard = () => {
   const router = useRouter();

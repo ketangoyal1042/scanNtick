@@ -17,7 +17,7 @@ const TopFiveEvents = () => {
   const [events, setEvents] = React.useState([]);
   const getEvents = async () => {
     try {
-      const response = await topUpcomingEvents();
+      const response = await topUpcomingEvents(5);
       if (response.success) {
         setEvents(response.events);
       }
@@ -34,7 +34,7 @@ const TopFiveEvents = () => {
     <div className="">
       <Box sx={{ width: "100%" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          {events.map((event) => (
+          {events?.map((event) => (
             <Grid item size={4} key={event._id}>
               <Card sx={{ maxWidth: 345 }} className="cursor-pointer hover:border border-blue-600 transition-shadow" onClick={() => router.push(`/event/${event._id}`)}>
                 <CardMedia className="h-30"

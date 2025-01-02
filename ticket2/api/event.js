@@ -1,8 +1,8 @@
 import api from "../axiosConfig";
 
-export const topUpcomingEvents = async (limit=0) => {
+export const topUpcomingEvents = async (limit = 0) => {
   try {
-    const response = await api.get(`/api/v1/event/EventList/${limit}`);
+    const response = await api.get(`/api/v1/event/EventList`);
     return response.data;
   } catch (error) {
     console.log(error);
@@ -19,7 +19,7 @@ export const createEvent = async (eventData) => {
     throw new Error(error.response?.data?.message || "Event Creation failed");
   }
 };
-export const getAllEvents = async() => {
+export const getAllEvents = async () => {
   try {
     const response = await api.get("/api/v1/event/GetAllEvents");
     return response.data;
@@ -29,13 +29,13 @@ export const getAllEvents = async() => {
   }
 }
 
-export const generateTicket = async(payload) => {
+export const generateTicket = async (payload) => {
   try {
     const response = await api.post("/api/v1/ticket/generate-ticket", payload);
     console.log(response.data);
     return response.data;
   } catch (error) {
-    
+
   }
 }
 
