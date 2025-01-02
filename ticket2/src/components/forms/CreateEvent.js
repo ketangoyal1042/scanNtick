@@ -64,12 +64,16 @@ const CreateEvent = () => {
     }
   };
 
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
 
   return (
     <div>
       <Container maxWidth="sm" className={styles.container}>
         <Box sx={{ m: 2 }} className="text-center">
-          <Typography variant="h4" gutterBottom className={styles.title}>
+          <Typography variant="h5" gutterBottom className={styles.title}>
             Create New Event
           </Typography>
           <form>

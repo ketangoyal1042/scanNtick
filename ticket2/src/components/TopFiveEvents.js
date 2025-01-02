@@ -35,7 +35,7 @@ const TopFiveEvents = () => {
       <Box sx={{ width: "100%" }}>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           {events.map((event) => (
-            <Grid item size={4} key={event?.id}>
+            <Grid item size={4} key={event._id}>
               <Card sx={{ maxWidth: 345 }} className="cursor-pointer hover:border border-blue-600 transition-shadow" onClick={() => router.push(`/event/${event._id}`)}>
                 <CardMedia className="h-30"
                   component="img"

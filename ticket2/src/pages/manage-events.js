@@ -4,10 +4,26 @@ import { Button, Tabs, TabsRef } from "flowbite-react";
 import { useRef, useState } from "react";
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { MdDashboard, MdLiveTv } from "react-icons/md";
+import { getAllEvents } from "../../api/event";
+import UpcomingEventList from "@/components/events/UpcomingEventList";
 
-const EventPage = () => {
+const ManageEvent = () => {
   const tabsRef = useRef(null);
   const [, setActiveTab] = useState(0);
+  const [EventList, setEventList] = useState([]);
+
+  const getAllEventsListing = async () => {
+    try {
+      const response = await getAllEvents();
+      const { events } = response;
+      setEventList(events);
+    } catch (error) {
+      toast.error(
+        error.message ||
+          "Something went wrong fetching the Events. Please try again."
+      );
+    }
+  };
 
   return (
     <div className="flex flex-col gap-3 text-center">
@@ -19,18 +35,7 @@ const EventPage = () => {
         className="flex justify-center"
       >
         <Tabs.Item active title="Upcoming" icon={MdLiveTv}>
-          <div className="mx-40">
-            This is{" "}
-            <span className="font-medium text-gray-800 dark:text-white">
-              Profile tab's associated content Lorem ipsum dolor sit amet,
-              consectetur adipisicing elit. Eos libero laboriosam accusantium.
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptas
-              molestias recusandae numquam dolores officia consectetur ad culpa
-              harum voluptate quis odit, aperiam cum incidunt sit iusto aliquid
-              libero dicta dolor non placeat natus tempore aut rerum? Quasi
-              inventore qui labore!
-            </span>
-          </div>
+          <UpcomingEventList/>
         </Tabs.Item>
         <Tabs.Item title="Past" icon={MdDashboard} className="mx-5">
           <div className="mx-40">
@@ -45,4 +50,4 @@ const EventPage = () => {
   );
 };
 
-export default EventPage;
+export default ManageEvent;
