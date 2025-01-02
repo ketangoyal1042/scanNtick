@@ -1,8 +1,20 @@
 import api from "../axiosConfig";
 
-export const topUpcomingEvents = async (limit = 0) => {
+export const getEventsData = async ({ limit, event_type } = {}) => {
   try {
-    const response = await api.get(`/api/v1/event/EventList`);
+    console.log("limit: " + limit);
+
+    const requestData = {};
+    if (limit !== undefined) {
+      requestData.limit = limit;
+    }
+    if (event_type) {
+      requestData.event_type = event_type;
+    }
+
+    const response = await api.get(`/api/v1/event/EventList`, {
+      params: requestData,
+    });
     return response.data;
   } catch (error) {
     console.log(error);
