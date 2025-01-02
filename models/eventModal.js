@@ -10,6 +10,14 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    headCapacity: {
+      type: Number,
+      required: true,
+    },
+    eventDateTime: {
+      type: Date,
+      required: true,
+    },
     userId: [
       {
         type: mongoose.Schema.Types.ObjectId, // Utlizing User Array to associate event with multiple users

@@ -37,7 +37,7 @@ const dashboard = () => {
         <div className="flex justify-center gap-3">
           <Button
             className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
-            onClick={() => router.push("/event-list")}
+            onClick={() => router.push("/manage-events")}
           >
             Manage Events
           </Button>

@@ -26,6 +26,13 @@ const ManageEvent = () => {
   };
 
   return (
+    <>
+    <Button
+          className="text-center text-base/7 font-semibold text-indigo-600"
+          onClick={handleOpen}
+        >
+          Create New Event
+        </Button>
     <div className="flex flex-col gap-3 text-center">
       <Tabs
         aria-label="Default tabs"
@@ -47,6 +54,7 @@ const ManageEvent = () => {
         </Tabs.Item>
       </Tabs>
     </div>
+        </>
   );
 };
 
