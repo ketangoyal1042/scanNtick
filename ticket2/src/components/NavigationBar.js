@@ -1,11 +1,11 @@
-"use client"
+"use client";
 import { clearUser } from "@/store/slices/authSlice";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFromLocalStorage } from "../../utils/storage";
-import { QrCode } from 'lucide-react';
+// import { QrCode } from 'lucide-react';
 
 const NavigationBar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -143,14 +143,11 @@ const NavigationBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <QrCode className="h-8 w-8 text-purple-600" />
+            {/* <QrCode className="h-8 w-8 text-purple-600" /> */}
             <span className="ml-2 text-xl font-bold text-gray-900">QRHost</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
-            <Link
-              href="/"
-              className="text-gray-600 hover:text-gray-900"
-            >
+            <Link href="/" className="text-gray-600 hover:text-gray-900">
               Home
             </Link>
             <Link
@@ -160,18 +157,36 @@ const NavigationBar = () => {
             >
               Dashboard
             </Link>
-            <Link
-              href="#"
-              className="text-gray-600 hover:text-gray-900"
-            >
+            <Link href="#" className="text-gray-600 hover:text-gray-900">
               Manage Events
             </Link>
-            <Link href="#" className="text-gray-600 hover:text-gray-900">Features</Link>
-            <a href="#" className="text-gray-600 hover:text-gray-900">Pricing</a>
-            <a href="#" className="text-gray-600 hover:text-gray-900">Support</a>
-            <button className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
-              Get Started
-            </button>
+            <a href="#" className="text-gray-600 hover:text-gray-900">
+              Support
+            </a>
+            {!isLoggedIn ? (
+              <>
+                {" "}
+                <button
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                  onClick={() => router.push("/login")}
+                >
+                  Login
+                </button>
+                <button
+                  className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                  onClick={() => router.push("/register")}
+                >
+                  Register
+                </button>
+              </>
+            ) : (
+              <button
+                className="bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>

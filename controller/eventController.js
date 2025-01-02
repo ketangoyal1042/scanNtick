@@ -56,7 +56,6 @@ export const eventListController = async (req, res) => {
 export const eventListByEmailController = async (req, res) => {
   try {
     const { email } = req.visitor;
-    console.log("email: " + email);
     const eventList = await ticketModal.find({ email: email }).populate("eventId");
     res.status(200).send({
       success: true,
@@ -70,4 +69,13 @@ export const eventListByEmailController = async (req, res) => {
       error,
     });
   }
+};
+
+export const getAllEventListController = async (req, res) => {
+  const userId = req.user._id;
+  const events = await eventModal.find({ userId }).select("_id, title");
+  res.status(200).send({
+    success: true,
+    events,
+  });
 };
