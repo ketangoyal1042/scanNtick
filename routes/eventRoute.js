@@ -1,12 +1,13 @@
 import express from 'express';
-import { eventListByEmailController, eventListController, eventRegisterController, getAllEventListController } from '../controller/eventController.js';
+import { eventDeleteController, eventListByEmailController, eventListController, eventRegisterController, getActiveEventTitleController } from '../controller/eventController.js';
 import { requireSignIn, verifiedVisitor } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 router.post('/registeration', requireSignIn, eventRegisterController);
-router.get('/EventList', requireSignIn, eventListController);
-router.get('/GetAllEvents', requireSignIn, getAllEventListController);
-router.get('/EventList/:email', verifiedVisitor, eventListByEmailController);
+router.get('/EventList/:id?', requireSignIn, eventListController);
+// router.get('/EventList/:email', verifiedVisitor, eventListByEmailController);
+router.get('/getActiveEvents', requireSignIn, getActiveEventTitleController);
+router.delete('/deleteEvent/:id?', requireSignIn, eventDeleteController);
 
 export default router;

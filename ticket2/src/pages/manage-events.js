@@ -4,7 +4,7 @@ import { Button, Tabs, TabsRef } from "flowbite-react";
 import { useRef, useState } from "react";
 import { HiAdjustments, HiClipboardList, HiUserCircle } from "react-icons/hi";
 import { MdDashboard, MdLiveTv } from "react-icons/md";
-import { getAllEvents } from "../../api/event";
+import { getActiveEvents } from "../../api/event";
 import UpcomingEventList from "@/components/events/UpcomingEventList";
 import WrapperModal from "@/components/common/WrapperModal";
 import CreateEvent from "@/components/forms/CreateEvent";
@@ -20,7 +20,7 @@ const ManageEvent = () => {
 
   const getAllEventsListing = async () => {
     try {
-      const response = await getAllEvents();
+      const response = await getActiveEvents();
       const { events } = response;
       setEventList(events);
     } catch (error) {

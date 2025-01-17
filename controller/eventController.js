@@ -48,10 +48,14 @@ export const eventListController = async (req, res) => {
   const userId = req.user._id;
   const limit = req.query.limit;
   const event_type = req.query.event_type;
+  const eventId = req.params.id;
   let query = { userId };
-  if (event_type === 'past') {
+  if (eventId) {
+    query._id = eventId;
+  }
+  if (event_type === "past") {
     query.eventDateTime = { $lt: new Date() };
-  } else if (event_type === 'upcoming') {
+  } else if (event_type === "upcoming") {
     query.eventDateTime = { $gte: new Date() };
   }
 
@@ -69,11 +73,12 @@ export const eventListController = async (req, res) => {
   });
 };
 
-
 export const eventListByEmailController = async (req, res) => {
   try {
     const { email } = req.visitor;
-    const eventList = await ticketModal.find({ email: email }).populate("eventId");
+    const eventList = await ticketModal
+      .find({ email: email })
+      .populate("eventId");
     res.status(200).send({
       success: true,
       eventList,
@@ -82,17 +87,57 @@ export const eventListByEmailController = async (req, res) => {
     console.log(error);
     res.status(500).send({
       success: false,
-      message: "Something went wrong",
+      message: "Something went wrong while fetching events",
       error,
     });
   }
 };
 
-export const getAllEventListController = async (req, res) => {
-  const userId = req.user._id;
-  const events = await eventModal.find({ userId }).select("_id, title");
-  res.status(200).send({
-    success: true,
-    events,
-  });
+export const getActiveEventTitleController = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const events = await eventModal
+      .find({ userId, eventDateTime: { $gt: new Date() } })
+      .select("_id, title");
+    res.status(200).send({
+      success: true,
+      events,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while fetching events",
+      error,
+    });
+  }
+};
+
+export const eventDeleteController = async (req, res) => {
+  try {
+    const EventId = req.params?.id;
+    
+    if (!EventId) {
+      return res.status(400).send({
+        success: false,
+        message: 'Event ID is required',
+      });
+    }
+    const event = await eventModal.findByIdAndDelete(EventId);
+    if (!event) {
+      return res.status(404).send({
+        success: false,
+        message: "Event Not Found with ID " + EventId,
+      });
+    }
+    res.status(200).send({
+      success: true,
+      message: "Event Deleted Successfully",
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while Delete events",
+      error: error.message,
+    });
+  }
 };
