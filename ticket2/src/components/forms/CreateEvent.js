@@ -14,7 +14,7 @@ import { useSelector } from "react-redux";
 import { createEvent } from "../../../api/event";
 import { toast } from "react-toastify";
 
-const CreateEvent = () => {
+const CreateEvent = ({setOpen}) => {
   const auth = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     title: "",
@@ -68,7 +68,7 @@ const CreateEvent = () => {
   };
 
   const handleCloseModal = () => {
-    setModalOpen(false);
+    setOpen(false);
   };
 
   return (

@@ -31,9 +31,9 @@ export const createEvent = async (eventData) => {
     throw new Error(error.response?.data?.message || "Event Creation failed");
   }
 };
-export const getAllEvents = async () => {
+export const getActiveEvents = async () => {
   try {
-    const response = await api.get("/api/v1/event/GetAllEvents");
+    const response = await api.get("/api/v1/event/getActiveEvents");
     return response.data;
   } catch (error) {
     console.log(error);

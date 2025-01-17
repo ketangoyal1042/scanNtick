@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { getEventsData } from "../../../api/event";
+import { toast } from "react-toastify";
 
 const UpcomingEventList = () => {
   const [events, setEvents] = React.useState([]);
@@ -10,7 +11,7 @@ const UpcomingEventList = () => {
         setEvents(response.events);
       }
     } catch (error) {
-      toast("Something went wrong. Please try again." + error.message);
+      toast.error("Something went wrong. Please try again." + error.message);
     }
   };
 

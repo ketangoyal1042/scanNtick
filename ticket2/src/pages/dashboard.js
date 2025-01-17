@@ -7,7 +7,7 @@ import TopFiveEvents from "@/components/TopFiveEvents";
 import { Stack } from "@mui/material";
 import { useRouter } from "next/router";
 import TicketGenerate from "@/components/forms/TicketGenerate";
-import { getAllEvents } from "../../api/event";
+import { getActiveEvents } from "../../api/event";
 import { toast } from "react-toastify";
 import ScanTicket from "@/components/ticket/ScanTicket";
 
@@ -23,7 +23,7 @@ const dashboard = () => {
   const openTicketForm = async () => {
     setOpenTicketFormModal(true);
     try {
-      const response = await getAllEvents();
+      const response = await getActiveEvents();
       const { events } = response;
       setEventList(events);
     } catch (error) {
