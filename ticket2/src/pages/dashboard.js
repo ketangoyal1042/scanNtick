@@ -9,14 +9,16 @@ import { useRouter } from "next/router";
 import TicketGenerate from "@/components/forms/TicketGenerate";
 import { getAllEvents } from "../../api/event";
 import { toast } from "react-toastify";
+import ScanTicket from "@/components/ticket/ScanTicket";
 
 const dashboard = () => {
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [eventopen, setEventOpen] = useState(false);
+  const [scanopen, setScanOpen] = useState(false);
   const [EventList, setEventList] = useState([]);
 
   const [openTicketFormModal, setOpenTicketFormModal] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () => setEventList(true);
 
   const openTicketForm = async () => {
     setOpenTicketFormModal(true);
@@ -27,7 +29,7 @@ const dashboard = () => {
     } catch (error) {
       toast.error(
         error.message ||
-          "Something went wrong fetching the Events. Please try again."
+        "Something went wrong fetching the Events. Please try again."
       );
     }
   };
@@ -37,7 +39,7 @@ const dashboard = () => {
       <Stack spacing={8} direction="row">
         <div className="flex justify-center gap-3">
           <Button
-            className="bg-purple-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+            className=""
             onClick={() => router.push("/manage-events")}
           >
             Manage Events
@@ -45,7 +47,7 @@ const dashboard = () => {
           <Button variant="outlined" onClick={openTicketForm}>
             Create Tickets
           </Button>
-          <Button variant="outlined">Scan Tickets</Button>
+          <Button variant="outlined" onClick={() => setScanOpen(true)}>Scan Tickets</Button>
         </div>
       </Stack>
       <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8 text-center">
@@ -56,7 +58,7 @@ const dashboard = () => {
           Create New Event
         </Button>
         <p className="mx-auto mt-2 max-w-lg text-balance text-center text-3xl font-semibold tracking-tight text-gray-950 sm:text-5xl"></p>
-        <WrapperModal open={open} setOpen={setOpen}>
+        <WrapperModal open={eventopen} setOpen={setEventOpen}>
           <CreateEvent />
         </WrapperModal>
         <h1 className="m-5 p-3 font-bold text-3xl text-gray-800">
@@ -67,6 +69,10 @@ const dashboard = () => {
           openModal={openTicketFormModal}
           setOpenModal={setOpenTicketFormModal}
           EventList={EventList}
+        />
+        <ScanTicket
+          openModal={scanopen}
+          setOpenModal={setScanOpen}
         />
       </div>
     </div>

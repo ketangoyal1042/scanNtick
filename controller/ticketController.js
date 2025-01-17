@@ -2,6 +2,7 @@ import QRcode from "qrcode";
 import ticketModal from "../models/ticketModal.js";
 import QrModal from "../models/QrModal.js";
 import { v4 as uuidv4 } from "uuid";
+import { mailTransporter } from "../helper/authHelper.js";
 
 export const ticketGeneratorContoller = async (req, res) => {
   const { mobileNumber, email, quantity, eventId } = req.body;
@@ -50,6 +51,17 @@ export const ticketGeneratorContoller = async (req, res) => {
         qrCodes: ticket.qrCodes,
         createdAt: ticket.createdAt,
       },
+    });
+    const transporter = mailTransporter();
+    const mailOptions = {
+      from: 'kushagragoyal1032@gmail.com',
+      to: email,
+      subject: 'Congratulations!! your ticket is created successfully.',
+      text: `Ticket is created successfully!! \n Ticket ID: ${ticket.id}`,
+    };
+    transporter.sendMail(mailOptions, (error) => {
+      if (error) return res.status(500).json({ error: 'Failed to send OTP.' });
+      res.json({ message: 'OTP sent successfully.' });
     });
   } catch (error) {
     console.log(error);
