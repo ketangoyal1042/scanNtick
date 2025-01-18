@@ -1,16 +1,24 @@
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux';
+import { updateEvent } from '../../../api/event';
+import { toast } from 'react-toastify';
 
-const UpdateEvent = () => {
+const UpdateEvent = ({ eventData, setOpenModal, eventId }) => {
     const auth = useSelector((state) => state.auth);
+    const formatDateTimeForInput = (dateTime) => {
+        const date = new Date(dateTime);
+        return date.toISOString().slice(0, 16);
+    };
+
+    eventData.eventDateTime = formatDateTimeForInput(eventData.eventDateTime);
+
     const [formData, setFormData] = useState({
-        title: "",
-        description: "",
-        eventVenue: "",
-        eventDateTime: "",
-        headCapacity: "",
+        title: eventData?.title,
+        description: eventData?.description,
+        eventVenue: eventData?.eventVenue,
+        eventDateTime: eventData?.eventDateTime,
+        headCapacity: eventData?.headCapacity,
     });
-    const [responseMessage, setResponseMessage] = useState("");
     const [errors, setErrors] = useState({});
 
     const validateForm = () => {
@@ -31,7 +39,7 @@ const UpdateEvent = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleCreateEvent = async (e) => {
+    const handleUpdateEvent = async (e) => {
         e.preventDefault();
         if (!validateForm()) return;
         try {
@@ -41,15 +49,16 @@ const UpdateEvent = () => {
                 const istOffset = 5.5 * 60 * 60 * 1000; // IST is UTC+5:30
                 const istDate = new Date(utcDate.getTime() + istOffset).toISOString();
                 const updatedFormData = { ...formData, eventDateTime: istDate };
-                let response = await createEvent(updatedFormData);
+
+                let response = await updateEvent(updatedFormData, eventId);
                 if (!response.success) {
-                    console.log("Error creating event", response.success);
+                    console.log("Error updation event", response.success);
                 }
                 toast(response?.message);
             }
-            handleCloseModal();
+            setOpenModal(false);
         } catch (error) {
-            toast("Failed to create event. Please try again.");
+            toast("Failed to update event. Please try again.");
             console.log(error);
         }
     };
@@ -142,7 +151,7 @@ const UpdateEvent = () => {
                     <div className="col-span-1 sm:col-span-2">
                         <button
                             type="submit"
-                            onClick={handleCreateEvent}
+                            onClick={handleUpdateEvent}
                             className="w-full px-4 py-2 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:ring-4 focus:ring-blue-300"
                         >
                             Submit

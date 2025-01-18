@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 const TopFiveEvents = () => {
   const router = useRouter();
   const [events, setEvents] = React.useState([]);
-  const getEvents = async () => {
+  const getEvent = async () => {
     try {
       const response = await getEventsData({ limit: 5 });
       if (response.success) {
@@ -26,7 +26,7 @@ const TopFiveEvents = () => {
   };
 
   useEffect(() => {
-    getEvents();
+    getEvent();
   }, []);
 
   return (

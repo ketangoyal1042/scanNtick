@@ -65,6 +65,8 @@ const dashboard = () => {
           5 Upcoming Events
         </h1>
         <TopFiveEvents />
+        
+        {/* Modal */}
         <TicketGenerate
           openModal={openTicketFormModal}
           setOpenModal={setOpenTicketFormModal}
