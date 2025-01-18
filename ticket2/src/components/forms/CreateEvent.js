@@ -58,11 +58,11 @@ const CreateEvent = ({setOpen}) => {
         if (!response.success) {
           console.log("Error creating event", response.success);
         }
-        toast(response?.message);
+        toast.success(response?.message);
       }
       handleCloseModal();
     } catch (error) {
-      toast("Failed to create event. Please try again.");
+      toast.error("Failed to create event. Please try again.");
       console.log(error);
     }
   };
