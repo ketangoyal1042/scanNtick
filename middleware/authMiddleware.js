@@ -1,4 +1,5 @@
 import JWT from "jsonwebtoken";
+import eventModal from "../models/eventModal.js";
 
 export const requireSignIn = async (req, res, next) => {
   try {
@@ -17,6 +18,29 @@ export const requireSignIn = async (req, res, next) => {
     });
   }
 };
+
+export const checkEventAdministrator  = async (req, res, next) => {
+  try {
+    const {_id: id} = req.user;
+    console.log(id);
+    
+    const isAdmin = await eventModal.isUserAdministrator(req.eventId, id);
+    if (!isAdmin) {
+      return res.status(403).json({
+        success: false,
+        message: "You do not have permission to perform this action",
+      });
+    }
+    next();
+
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Encounter Error while in Authorization Role",
+      error,
+    });
+  }
+}
 
 export const verifiedVisitor = async (req, res, next) => {
   try {
