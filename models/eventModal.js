@@ -10,6 +10,10 @@ const eventSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    eventVenue: {
+      type: String,
+      required: true,
+    },
     headCapacity: {
       type: Number,
       required: true,
@@ -20,7 +24,7 @@ const eventSchema = new mongoose.Schema(
     },
     userId: [
       {
-        type: mongoose.Schema.Types.ObjectId, // Utlizing User Array to associate event with multiple users
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
