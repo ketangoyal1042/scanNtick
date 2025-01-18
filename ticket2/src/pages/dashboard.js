@@ -59,7 +59,7 @@ const dashboard = () => {
         </Button>
         <p className="mx-auto mt-2 max-w-lg text-balance text-center text-3xl font-semibold tracking-tight text-gray-950 sm:text-5xl"></p>
         <WrapperModal open={eventopen} setOpen={setEventOpen}>
-          <CreateEvent />
+          <CreateEvent setOpen={setEventOpen}/>
         </WrapperModal>
         <h1 className="m-5 p-3 font-bold text-3xl text-gray-800">
           5 Upcoming Events
