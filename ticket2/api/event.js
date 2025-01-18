@@ -2,8 +2,6 @@ import api from "../axiosConfig";
 
 export const getEventsData = async ({ limit, event_type } = {}) => {
   try {
-    console.log("limit: " + limit);
-
     const requestData = {};
     if (limit !== undefined) {
       requestData.limit = limit;
@@ -22,6 +20,17 @@ export const getEventsData = async ({ limit, event_type } = {}) => {
   }
 };
 
+export const getEventData = async ({ event_id }) => {
+  try {
+    console.log("fvdfvsdf", event_id);
+    const response = await api.get(`/api/v1/event/${event_id}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.response?.data?.message || "Event fatch failed");
+  }
+}
+
 export const createEvent = async (eventData) => {
   try {
     const response = await api.post("api/v1/event/registeration", eventData);
@@ -31,6 +40,27 @@ export const createEvent = async (eventData) => {
     throw new Error(error.response?.data?.message || "Event Creation failed");
   }
 };
+
+export const updateEvent = async (eventData, eventId) => {
+  try {
+    const response = await api.patch(`api/v1/event/updateEvent/${eventId}`, eventData);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.response?.data?.message || "Event Updation failed");
+  }
+}
+
+export const deleteEvent = async (eventId) => {
+  try {
+    const response = await api.delete(`api/v1/event/deleteEvent/${eventId}`);
+    return response.data;
+  } catch (error) {
+    console.log(error);
+    throw new Error(error.response?.data?.message || "Event deletion failed");
+  }
+}
+
 export const getActiveEvents = async () => {
   try {
     const response = await api.get("/api/v1/event/getActiveEventsTitle");
