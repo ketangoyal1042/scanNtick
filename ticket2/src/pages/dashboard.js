@@ -18,7 +18,7 @@ const dashboard = () => {
   const [EventList, setEventList] = useState([]);
 
   const [openTicketFormModal, setOpenTicketFormModal] = useState(false);
-  const handleOpen = () => setEventList(true);
+  const handleOpenEvent = () => setEventOpen(true);
 
   const openTicketForm = async () => {
     setOpenTicketFormModal(true);
@@ -53,7 +53,7 @@ const dashboard = () => {
       <div className="mx-auto max-w-2xl px-6 lg:max-w-7xl lg:px-8 text-center">
         <Button
           className="text-center text-base/7 font-semibold text-indigo-600"
-          onClick={handleOpen}
+          onClick={handleOpenEvent}
         >
           Create New Event
         </Button>
