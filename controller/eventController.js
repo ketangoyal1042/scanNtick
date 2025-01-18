@@ -4,7 +4,7 @@ import ticketModal from "../models/ticketModal.js";
 export const eventRegisterController = async (req, res) => {
   const { title, description, headCapacity, eventDateTime, eventVenue } = req.body;
   const userId = req.user._id;
-  console.log(userId);
+  console.log(eventVenue);
   
   try {
     if (!title) {
@@ -162,11 +162,12 @@ export const eventDeleteController = async (req, res) => {
 
 export const eventUpdateController = async (req, res) => {
   try {
-    const { title, description, headCapacity, eventDateTime } = req.body;
+    const { title, description, headCapacity, eventDateTime, eventVenue } = req.body;
     const updateFields = {
       ...(title && { title }),
       ...(description && { description }),
       ...(headCapacity && { headCapacity }),
+      ...(eventVenue && { eventVenue }),
       ...(eventDateTime && { eventDateTime: new Date(eventDateTime) }),
     };
     const event = await eventModal.findByIdAndUpdate(
