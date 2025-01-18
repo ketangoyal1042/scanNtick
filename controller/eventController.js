@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import eventModal from "../models/eventModal.js";
 import ticketModal from "../models/ticketModal.js";
 
@@ -48,11 +49,7 @@ export const eventListController = async (req, res) => {
   const userId = req.user._id;
   const limit = req.query.limit;
   const event_type = req.query.event_type;
-  const eventId = req.params.id;
   let query = { userId };
-  if (eventId) {
-    query._id = eventId;
-  }
   if (event_type === "past") {
     query.eventDateTime = { $lt: new Date() };
   } else if (event_type === "upcoming") {
@@ -71,6 +68,41 @@ export const eventListController = async (req, res) => {
     success: true,
     events: result,
   });
+};
+
+export const getEventbyIdController = async (req, res) => {
+  try {
+    const eventId = req.params.id;
+    if (!eventId) {
+      return res.status(400).send({
+        success: false,
+        message: "Event ID is required",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Event ID format",
+      });
+    }
+    const result = await eventModal.findById(eventId).select("-userId");
+    if(!result){
+      return res.status(404).send({
+        success: false,
+        message: "Event Not Exist with ID " + eventId,
+      });
+    }
+    res.status(200).send({
+      success: true,
+      event: result,
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while fetching event",
+      error,
+    });
+  }
 };
 
 export const eventListByEmailController = async (req, res) => {
@@ -115,11 +147,17 @@ export const getActiveEventTitleController = async (req, res) => {
 export const eventDeleteController = async (req, res) => {
   try {
     const EventId = req.params?.id;
-    
+
     if (!EventId) {
       return res.status(400).send({
         success: false,
-        message: 'Event ID is required',
+        message: "Event ID is required",
+      });
+    }
+    if (!mongoose.Types.ObjectId.isValid(eventId)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Event ID format",
       });
     }
     const event = await eventModal.findByIdAndDelete(EventId);
@@ -138,6 +176,49 @@ export const eventDeleteController = async (req, res) => {
       success: false,
       message: "Something went wrong while Delete events",
       error: error.message,
+    });
+  }
+};
+
+export const eventUpdateController = async (req, res) => {
+  try {
+    const { id, title, description, headCapacity, eventDateTime } = req.body;
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Event ID is required",
+      });
+    }
+    const event = await eventModal.findByIdAndUpdate(
+      id,
+      {
+        title,
+        description,
+        userId,
+        headCapacity,
+        eventDateTime: new Date(eventDateTime),
+      },
+      { new: true }
+    );
+
+    if (!event) {
+      return res.status(404).json({
+        success: false,
+        message: `Event not found with ID ${id}`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Event updated successfully",
+      data: event,
+    });
+  } catch (error) {
+    console.error("Error updating event:", error);
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while updating the event",
+      error,
     });
   }
 };

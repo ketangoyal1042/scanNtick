@@ -33,7 +33,7 @@ export const createEvent = async (eventData) => {
 };
 export const getActiveEvents = async () => {
   try {
-    const response = await api.get("/api/v1/event/getActiveEvents");
+    const response = await api.get("/api/v1/event/getActiveEventsTitle");
     return response.data;
   } catch (error) {
     console.log(error);
