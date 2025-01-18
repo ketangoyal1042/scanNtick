@@ -28,4 +28,12 @@ const eventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+eventSchema.statics.isUserAdministrator = async function (eventId, userId) {
+  const event = await this.findOne({
+    _id: eventId,
+    userId: userId,
+  });
+  return !!event;
+};
+
 export default mongoose.model("Event", eventSchema);

@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import eventModal from "../models/eventModal.js";
 import ticketModal from "../models/ticketModal.js";
 
@@ -73,20 +72,8 @@ export const eventListController = async (req, res) => {
 export const getEventbyIdController = async (req, res) => {
   try {
     const eventId = req.params.id;
-    if (!eventId) {
-      return res.status(400).send({
-        success: false,
-        message: "Event ID is required",
-      });
-    }
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Event ID format",
-      });
-    }
     const result = await eventModal.findById(eventId).select("-userId");
-    if(!result){
+    if (!result) {
       return res.status(404).send({
         success: false,
         message: "Event Not Exist with ID " + eventId,
@@ -146,20 +133,7 @@ export const getActiveEventTitleController = async (req, res) => {
 
 export const eventDeleteController = async (req, res) => {
   try {
-    const EventId = req.params?.id;
-
-    if (!EventId) {
-      return res.status(400).send({
-        success: false,
-        message: "Event ID is required",
-      });
-    }
-    if (!mongoose.Types.ObjectId.isValid(eventId)) {
-      return res.status(400).json({
-        success: false,
-        message: "Invalid Event ID format",
-      });
-    }
+    const { id: EventId } = req.params;
     const event = await eventModal.findByIdAndDelete(EventId);
     if (!event) {
       return res.status(404).send({
@@ -182,22 +156,16 @@ export const eventDeleteController = async (req, res) => {
 
 export const eventUpdateController = async (req, res) => {
   try {
-    const { id, title, description, headCapacity, eventDateTime } = req.body;
-    if (!id) {
-      return res.status(400).json({
-        success: false,
-        message: "Event ID is required",
-      });
-    }
+    const { title, description, headCapacity, eventDateTime } = req.body;
+    const updateFields = {
+      ...(title && { title }),
+      ...(description && { description }),
+      ...(headCapacity && { headCapacity }),
+      ...(eventDateTime && { eventDateTime: new Date(eventDateTime) }),
+    };
     const event = await eventModal.findByIdAndUpdate(
-      id,
-      {
-        title,
-        description,
-        userId,
-        headCapacity,
-        eventDateTime: new Date(eventDateTime),
-      },
+      req.eventId,
+      updateFields,
       { new: true }
     );
 
