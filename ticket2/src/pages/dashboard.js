@@ -10,6 +10,7 @@ import TicketGenerate from "@/components/forms/TicketGenerate";
 import { getActiveEvents } from "../../api/event";
 import { toast } from "react-toastify";
 import ScanTicket from "@/components/ticket/ScanTicket";
+import ModernWrapperModal from "@/components/common/ModernWrapperModal";
 
 const dashboard = () => {
   const router = useRouter();
@@ -59,23 +60,26 @@ const dashboard = () => {
         </Button>
         <p className="mx-auto mt-2 max-w-lg text-balance text-center text-3xl font-semibold tracking-tight text-gray-950 sm:text-5xl"></p>
         <WrapperModal open={eventopen} setOpen={setEventOpen}>
-          <CreateEvent setOpen={setEventOpen}/>
+          <CreateEvent setOpen={setEventOpen} />
         </WrapperModal>
         <h1 className="m-5 p-3 font-bold text-3xl text-gray-800">
           5 Upcoming Events
         </h1>
         <TopFiveEvents />
-        
+
         {/* Modal */}
         <TicketGenerate
           openModal={openTicketFormModal}
           setOpenModal={setOpenTicketFormModal}
           EventList={EventList}
         />
-        <ScanTicket
+        <ModernWrapperModal openModal={scanopen} setOpenModal={setScanOpen}>
+          {/* <ScanTicket
           openModal={scanopen}
           setOpenModal={setScanOpen}
-        />
+        /> */}
+          <h4>Hello</h4>
+        </ModernWrapperModal>
       </div>
     </div>
   );
