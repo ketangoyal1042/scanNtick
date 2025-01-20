@@ -12,12 +12,14 @@ import { useRouter } from "next/router";
 import { getEventData } from "../../../api/event";
 import { toast } from "react-toastify";
 import { ArrowLeft, Calendar, Clock, MapPin, Share2 } from "lucide-react";
+import TicketGenerateFromEvent from "@/components/forms/TicketGenerateFromEvent";
 
 const EventPage = () => {
   const router = useRouter();
   const [, setActiveTab] = useState(0);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openTicketModal, setOpenTicketModal] = useState(false);
 
   const { eventId } = router.query;
   const [event, setEvent] = useState(null);
@@ -57,11 +59,15 @@ const EventPage = () => {
         </Dropdown>
       </div>
       <ModernWrapperModal openModal={openUpdateModal} setOpenModal={setOpenUpdateModal}>
-        <UpdateEvent setOpenModal={setOpenUpdateModal} eventData={event} eventId={eventId}/>
+        <UpdateEvent setOpenModal={setOpenUpdateModal} eventData={event} eventId={eventId} />
       </ModernWrapperModal>
       <ModernWrapperModal openModal={openDeleteModal} setOpenModal={setOpenDeleteModal}>
         <DeleteEvent setOpenModal={setOpenDeleteModal} eventId={eventId} />
       </ModernWrapperModal>
+      <ModernWrapperModal openModal={openTicketModal} setOpenModal={setOpenTicketModal}>
+        <TicketGenerateFromEvent openModal={openTicketModal} setOpenModal={setOpenTicketModal} eventId={eventId} />
+      </ModernWrapperModal>
+
 
       {event && <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
         <div className="relative h-96">
@@ -127,7 +133,7 @@ const EventPage = () => {
           </div> */}
 
           <div className="flex gap-4">
-            <button className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
+            <button onClick={() => setOpenTicketModal(true)} className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
               Register Now
             </button>
             <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">

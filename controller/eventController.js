@@ -122,7 +122,7 @@ export const getActiveEventTitleController = async (req, res) => {
   try {
     const userId = req.user._id;
     const events = await eventModal
-      .find({ userId, eventDateTime: { $gt: new Date() } })
+      .find({ userId, eventDateTime: { $gte: new Date() } })
       .select("_id, title");
     res.status(200).send({
       success: true,

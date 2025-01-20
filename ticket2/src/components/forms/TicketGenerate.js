@@ -81,10 +81,10 @@ const TicketGenerate = ({ openModal, setOpenModal, EventList }) => {
             </h3>
             <div className="max-w-md">
               <div className="mb-2 block">
-                <Label htmlFor="countries" value="Select your country" />
+                <Label htmlFor="events" value="Select your Event" />
               </div>
               <Select
-                id="countries"
+                id="events"
                 required
                 onChange={handleChange}
                 name="eventId"
