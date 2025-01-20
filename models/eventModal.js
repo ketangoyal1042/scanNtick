@@ -28,6 +28,12 @@ const eventSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    subAdmins: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
