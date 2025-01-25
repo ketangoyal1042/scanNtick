@@ -38,6 +38,7 @@ const eventSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+//Check Administratration
 eventSchema.statics.isUserAdministrator = async function (eventId, userId) {
   const event = await this.findOne({
     _id: eventId,

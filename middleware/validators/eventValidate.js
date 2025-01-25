@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 export const validateEventId = (req, res, next) => {
-  const { id: EventId } = req.params;
+  const EventId = req.params.id || req.body.eventId;
   if (!EventId) {
     return res.status(400).send({
       success: false,
