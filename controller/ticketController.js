@@ -27,6 +27,7 @@ export const ticketGeneratorContoller = async (req, res) => {
       const qr = new QrModal({
         qrCodeId: codeId,
         qrCode: qrCodeDataUrl,
+        eventId: eventId,
       });
       qrCodes.push(qr._id);
       await qr.save();
@@ -84,17 +85,13 @@ export const scanQrController = async (req, res) => {
 
     // Find QR Code
     const qrCode = await QrModal.findOne({ qrCodeId: codeId });
-    console.log("QR Code Data:", qrCode);
-
     if (!qrCode) {
       return res.status(404).json({ success: false, message: "QR Ticket does not exist" });
     }
-
     // Check if already scanned
     if (qrCode.isScanned) {
       return res.status(200).json({ success: false, message: "QR Code already used" });
     }
-
     // Mark as scanned
     qrCode.isScanned = true;
     qrCode.scannedAt = new Date();

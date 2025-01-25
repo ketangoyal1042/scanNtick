@@ -6,6 +6,11 @@ const qrCodeSchema = new mongoose.Schema({
 //     ref: "Ticket",
 //     required: true,
 //   },
+  eventId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Event",
+    required: true,
+  },
   qrCodeId: {
     type: String,
     unique: true,

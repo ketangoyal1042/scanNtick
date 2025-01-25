@@ -1,26 +1,37 @@
 import eventModal from "../models/eventModal.js";
 
-export const AccociateHost = async (req, res, next) => {
+// Helper function to check if the event exists
+const checkEventExistence = async (eventId) => {
+  const event = await eventModal.findById(eventId);
+  return event;
+};
+
+// Helper function to check if the user is a host for the event
+const checkUserIsHost = (event, userId) => {
+  return event.userId.includes(userId) || event.subAdmins.includes(userId);
+};
+
+export const accociateHost = async (req, res, next) => {
   try {
     const { eventId } = req.query;
-    const hosts = await eventModal.findById(eventId).select('userId');
-    if (hosts) {
-      const user = hosts.userId.includes(req.user._id);
-      if (user) {
-        next();
-      }
-      else {
-        res.status(401).send({ success: false, message: "You does not have Access to Scan!" });
-      }
+    const event = await checkEventExistence(eventId);
+    if (!event) {
+      return res.status(200).send({ success: false, message: "Event not found!" });
     }
-    console.log("host", hosts);
 
+    const isHost = checkUserIsHost(event, req.user._id);
+    if (isHost) {
+      next();
+    } else {
+      // User is not a host, return an error message
+      res.status(200).send({ success: false, message: "Use does not have Access to scan QR!" });
+    }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     res.status(400).send({
       success: false,
-      message: "Encounter Error while in Verification",
+      message: "Encountered an error during verification.",
       error,
     });
   }
-}
+};
