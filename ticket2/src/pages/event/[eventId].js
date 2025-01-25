@@ -1,9 +1,7 @@
 "use client";
 
-import { Button, Tabs, TabsRef } from "flowbite-react";
-import { useEffect, useRef, useState } from "react";
-import { HiAdjustments, HiClipboardList, HiDotsVertical, HiUserCircle } from "react-icons/hi";
-import { MdDashboard, MdLiveTv } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { HiDotsVertical } from "react-icons/hi";
 import { Dropdown } from "flowbite-react";
 import ModernWrapperModal from "@/components/common/ModernWrapperModal";
 import UpdateEvent from "@/components/forms/UpdateEvent";
@@ -13,10 +11,11 @@ import { getEventData } from "../../../api/event";
 import { toast } from "react-toastify";
 import { ArrowLeft, Calendar, Clock, MapPin, Share2 } from "lucide-react";
 import TicketGenerateFromEvent from "@/components/forms/TicketGenerateFromEvent";
+import { GetFormatDateTime } from "@/components/utils/conversions";
 
 const EventPage = () => {
   const router = useRouter();
-  const [, setActiveTab] = useState(0);
+  // const [, setActiveTab] = useState(0);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openTicketModal, setOpenTicketModal] = useState(false);
@@ -96,28 +95,28 @@ const EventPage = () => {
               <Calendar className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm text-gray-500">Date</p>
-                <p className="font-medium">{event.date}</p>
+                <p className="font-medium">{GetFormatDateTime(event.eventDateTime)[0]}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Clock className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm text-gray-500">Time</p>
-                <p className="font-medium">{event.time}</p>
+                <p className="font-medium">{GetFormatDateTime(event.eventDateTime)[1]}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <MapPin className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm text-gray-500">Location</p>
-                <p className="font-medium">{event.location}</p>
+                <p className="font-medium">{event.eventVenue}</p>
               </div>
             </div>
           </div>
 
           <div className="prose max-w-none mb-8">
             <h2 className="text-2xl font-semibold mb-4">About the Event</h2>
-            <p className="whitespace-pre-line">{event.fullDescription}</p>
+            <p className="whitespace-pre-line">{event.description}</p>
           </div>
 
           {/* <div className="mb-8">

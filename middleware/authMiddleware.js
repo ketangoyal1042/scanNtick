@@ -19,11 +19,9 @@ export const requireSignIn = async (req, res, next) => {
   }
 };
 
-export const checkEventAdministrator  = async (req, res, next) => {
+export const checkEventAdministrator = async (req, res, next) => {
   try {
-    const {_id: id} = req.user;
-    console.log(id);
-    
+    const { _id: id } = req.user;
     const isAdmin = await eventModal.isUserAdministrator(req.eventId, id);
     if (!isAdmin) {
       return res.status(403).json({
@@ -32,7 +30,6 @@ export const checkEventAdministrator  = async (req, res, next) => {
       });
     }
     next();
-
   } catch (error) {
     res.status(500).send({
       success: false,
@@ -40,7 +37,7 @@ export const checkEventAdministrator  = async (req, res, next) => {
       error,
     });
   }
-}
+};
 
 export const verifiedVisitor = async (req, res, next) => {
   try {

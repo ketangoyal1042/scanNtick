@@ -1,11 +1,12 @@
 import eventModal from "../models/eventModal.js";
 import ticketModal from "../models/ticketModal.js";
+import userModal from "../models/userModal.js";
 
 export const eventRegisterController = async (req, res) => {
-  const { title, description, headCapacity, eventDateTime, eventVenue } = req.body;
+  const { title, description, headCapacity, eventDateTime, eventVenue } =
+    req.body;
   const userId = req.user._id;
-  console.log(eventVenue);
-  
+
   try {
     if (!title) {
       return res.send({ message: "Title is required" });
@@ -162,7 +163,8 @@ export const eventDeleteController = async (req, res) => {
 
 export const eventUpdateController = async (req, res) => {
   try {
-    const { title, description, headCapacity, eventDateTime, eventVenue } = req.body;
+    const { title, description, headCapacity, eventDateTime, eventVenue } =
+      req.body;
     const updateFields = {
       ...(title && { title }),
       ...(description && { description }),
@@ -193,6 +195,111 @@ export const eventUpdateController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Something went wrong while updating the event",
+      error,
+    });
+  }
+};
+
+// ================COLLABORATOR=======================
+
+export const addCollaboratorController = async (req, res) => {
+  try {
+    const { email, eventId } = req.body;
+    if (!email || !eventId) {
+      return res.status(400).send({
+        success: false,
+        message: "Email and Event ID are required.",
+      });
+    }
+
+    const user = await userModal.findOne({ email });
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not exist, Please ask him to create a new Account",
+      });
+    }
+    const event = await eventModal.findOne({
+      _id: eventId,
+      subAdmins: { $elemMatch: { $eq: user._id } },
+    });
+
+    if (!event) {
+      const eventExists = await eventModal.exists({ _id: eventId });
+      if (!eventExists) {
+        return res.status(404).send({
+          success: false,
+          message: "Event does not exist",
+        });
+      }
+      await eventModal.updateOne(
+        { _id: eventId },
+        { $addToSet: { subAdmins: user._id } }
+      );
+      res.status(200).send({
+        success: true,
+        message: "User has been successfully added from sub-admins.",
+      });
+    } else {
+      return res.status(200).send({
+        success: true,
+        message: "User is already associated as a sub-admin.",
+      });
+    }
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while Adding new SubCollaborator",
+      error,
+    });
+  }
+};
+
+export const removeCollaboratorController = async (req, res) => {
+  try {
+    const { eventId, userId } = req.body;
+    const user = await userModal.findById(userId);
+    if (!user) {
+      return res.status(404).send({
+        success: false,
+        message: "User not exist with Us",
+      });
+    }
+
+    const event = eventModal.findOne({
+      _id: eventId,
+      subAdmins: { $elemMatch: { $eq: userId } },
+    });
+
+    if (!event) {
+      const eventExists = await eventModal.exists({ _id: eventId });
+      if (!eventExists) {
+        return res.status(404).send({
+          success: false,
+          message: "Event does not exist",
+        });
+      } else {
+        // If the event exists but the user is not a sub-admin
+        return res.status(404).send({
+          success: false,
+          message: "User is not associated as a sub-admin for this event.",
+        });
+      }
+    }
+
+    // Remove the user from the subAdmins array
+    await eventModal.updateOne(
+      { _id: eventId },
+      { $pull: { subAdmins: user._id } }
+    );
+    res.status(200).send({
+      success: true,
+      message: "User has been successfully removed from sub-admins.",
+    });
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while removing SubCollaborator",
       error,
     });
   }

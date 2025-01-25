@@ -28,10 +28,17 @@ const eventSchema = new mongoose.Schema(
         ref: "User",
       },
     ],
+    subAdmins: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );
 
+//Check Administratration
 eventSchema.statics.isUserAdministrator = async function (eventId, userId) {
   const event = await this.findOne({
     _id: eventId,
