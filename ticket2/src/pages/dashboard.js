@@ -40,7 +40,7 @@ const dashboard = () => {
       <Stack spacing={8} direction="row">
         <div className="flex justify-center gap-3">
           <Button
-            className=""
+            variant="outlined"
             onClick={() => router.push("/manage-events")}
           >
             Manage Events

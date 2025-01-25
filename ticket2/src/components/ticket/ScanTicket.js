@@ -24,7 +24,7 @@ const ScanTicket = ({ openModal, setOpenModal }) => {
             // }
 
             const response = await scanQr({ code_id: codeId, event_id: eventId });
-            console.log("response: " + response);
+            console.log("REPOSEeED", response);
 
             if (!response.success) {
                 console.error("Error scan:", response.success);
@@ -114,10 +114,9 @@ const ScanTicket = ({ openModal, setOpenModal }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="flex flex-col items-center justify-center">
             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
                 <h1 className="text-2xl font-bold text-center mb-6">QR Code Scanner</h1>
-
                 <div
                     id="reader"
                     className="w-full h-64 mb-4 overflow-hidden rounded-lg"

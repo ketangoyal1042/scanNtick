@@ -1,14 +1,14 @@
 import express from "express";
 import {
-  scanQrContoller,
+  scanQrController,
   ticketGeneratorContoller,
 } from "../controller/ticketController.js";
-import {requireSignIn } from "../middleware/authMiddleware.js";
-import { AccociateHost } from "../middleware/eventMiddleware.js";
+import { requireSignIn } from "../middleware/authMiddleware.js";
+import { accociateHost } from "../middleware/eventMiddleware.js";
 
 const router = express.Router();
 
 router.post("/generate-ticket", requireSignIn, ticketGeneratorContoller);
-router.get("/scan", requireSignIn, AccociateHost, scanQrContoller);
+router.get("/scan", requireSignIn, accociateHost, scanQrController);
 
 export default router;
