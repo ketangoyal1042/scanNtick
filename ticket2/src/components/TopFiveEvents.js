@@ -16,7 +16,7 @@ const TopFiveEvents = () => {
   const [events, setEvents] = React.useState([]);
   const getEvent = async () => {
     try {
-      const response = await getEventsData({ limit: 5 });
+      const response = await getEventsData({ limit: 5, event_type: "upcoming" });
       if (response.success) {
         setEvents(response.events);
       }

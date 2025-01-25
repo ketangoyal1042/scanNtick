@@ -73,17 +73,26 @@ export const ticketGeneratorContoller = async (req, res) => {
   }
 };
 
-export const scanQrContoller = async (req, res) => {
+export const scanQrController = async (req, res) => {
   const { codeId, eventId } = req.query;
+
   try {
+    // Validate request parameters
+    if (!codeId || !eventId) {
+      return res.status(400).json({ success: false, message: "Code ID and Event ID are required" });
+    }
+
+    // Find QR Code
     const qrCode = await QrModal.findOne({ qrCodeId: codeId });
+    console.log("QR Code Data:", qrCode);
+
     if (!qrCode) {
-      return res.status(404).json({ error: "QR Ticket Not Exists with Us" });
+      return res.status(404).json({ success: false, message: "QR Ticket does not exist" });
     }
 
     // Check if already scanned
     if (qrCode.isScanned) {
-      return res.status(400).json({ error: "QR Code already used" });
+      return res.status(200).json({ success: false, message: "QR Code already used" });
     }
 
     // Mark as scanned
@@ -91,33 +100,10 @@ export const scanQrContoller = async (req, res) => {
     qrCode.scannedAt = new Date();
     await qrCode.save();
 
-    res.json({ message: "QR Code successfully scanned!" });
+    // Respond with success
+    return res.status(200).json({ success: true, message: "QR Code successfully scanned!" });
   } catch (error) {
-    res.status(500).json({ error: "Error processing QR code" });
+    console.error("Error in scanQrController:", error);
+    return res.status(500).json({ success: false, message: "Error processing QR code" });
   }
-  // try {
-  //   const { codeId } = req.body;
-
-  //   const qrCode = await QrModal.findOne({ qrCodeId: codeId });
-
-  //   if (!qrCode) {
-  //     return res.status(404).json({ error: "QR code not found." });
-  //   }
-
-  //   if (qrCode.isScanned) {
-  //     return res
-  //       .status(400)
-  //       .json({ error: "This QR code has already been used." });
-  //   }
-
-  //   // Mark QR code as scanned
-  //   qrCode.isScanned = true;
-  //   qrCode.scannedAt = new Date();
-  //   await qrCode.save();
-
-  //   return res.status(200).json({ message: "QR code scanned successfully! Now it would no longer be valid" });
-  // } catch (error) {
-  //   console.error("Error scanning QR code:", error);
-  //   return res.status(500).json({ error: "Server error" });
-  // }
 };

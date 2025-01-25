@@ -74,11 +74,10 @@ const dashboard = () => {
           EventList={EventList}
         />
         <ModernWrapperModal openModal={scanopen} setOpenModal={setScanOpen}>
-          {/* <ScanTicket
-          openModal={scanopen}
-          setOpenModal={setScanOpen}
-        /> */}
-          <h4>Hello</h4>
+          <ScanTicket
+            openModal={scanopen}
+            setOpenModal={setScanOpen}
+          />
         </ModernWrapperModal>
       </div>
     </div>
