@@ -8,6 +8,7 @@ import {
   eventUpdateController,
   getActiveEventTitleController,
   getEventbyIdController,
+  getsubAdminController,
   removeCollaboratorController,
 } from "../controller/eventController.js";
 import {
@@ -62,5 +63,13 @@ router.put(
   checkEventAdministrator,
   removeCollaboratorController
 );
+
+router.get(
+    "/subCollaborator/getList/:id",
+    requireSignIn,
+    validateEventId,
+    checkEventAdministrator,
+    getsubAdminController
+)
 
 export default router;

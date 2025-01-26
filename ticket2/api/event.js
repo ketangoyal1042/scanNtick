@@ -29,7 +29,7 @@ export const getEventData = async ({ event_id }) => {
     console.log(error);
     throw new Error(error.response?.data?.message || "Event fatch failed");
   }
-}
+};
 
 export const createEvent = async (eventData) => {
   try {
@@ -43,13 +43,16 @@ export const createEvent = async (eventData) => {
 
 export const updateEvent = async (eventData, eventId) => {
   try {
-    const response = await api.patch(`api/v1/event/updateEvent/${eventId}`, eventData);
+    const response = await api.patch(
+      `api/v1/event/updateEvent/${eventId}`,
+      eventData
+    );
     return response.data;
   } catch (error) {
     console.log(error);
     throw new Error(error.response?.data?.message || "Event Updation failed");
   }
-}
+};
 
 export const deleteEvent = async (eventId) => {
   try {
@@ -59,7 +62,7 @@ export const deleteEvent = async (eventId) => {
     console.log(error);
     throw new Error(error.response?.data?.message || "Event deletion failed");
   }
-}
+};
 
 export const getActiveEvents = async () => {
   try {
@@ -69,16 +72,30 @@ export const getActiveEvents = async () => {
     console.log(error);
     throw new Error(error.response?.data?.message || "Event list failed");
   }
-}
+};
 
 export const generateTicket = async (payload) => {
   try {
     const response = await api.post("/api/v1/ticket/generate-ticket", payload);
     console.log(response.data);
     return response.data;
-  } catch (error) {
+  } catch (error) {}
+};
 
+export const addEventCollaborator = async (payload) => {
+  try {
+    const response = await api.post("/api/v1/event/subCollaborator/add", payload);
+    return response.data;
+  } catch (error) {
+    return new Error(error.response?.data?.message || "Something went wrong while adding collaborator")
   }
 }
 
-
+export const getEventCollaborator = async (EventId) => {
+  try {
+    const response = await api.get(`api/v1/event/subCollaborator/getList/${EventId}`);
+    return response.data;
+  } catch (error) {
+    return new Error(error.response?.data?.message || "Something went wrong while fetching collaborator")
+  }
+}

@@ -236,14 +236,16 @@ export const addCollaboratorController = async (req, res) => {
         { _id: eventId },
         { $addToSet: { subAdmins: user._id } }
       );
-      res.status(200).send({
+      res.status(404).send({
         success: true,
         message: "User has been successfully added from sub-admins.",
+        
       });
     } else {
-      return res.status(200).send({
-        success: true,
+      return res.status(404).send({
+        success: false,
         message: "User is already associated as a sub-admin.",
+        status: "ALREADY_ADDED"
       });
     }
   } catch (error) {
@@ -300,6 +302,25 @@ export const removeCollaboratorController = async (req, res) => {
     res.status(500).send({
       success: false,
       message: "Something went wrong while removing SubCollaborator",
+      error,
+    });
+  }
+};
+
+export const getsubAdminController = async (req, res) => {
+  try {
+      const {id: eventId} = req.params;
+      const event = await eventModal.findById(eventId).populate({path: 'subAdmins', select: '-password -role -createdAt -updatedAt'});
+      res.status(200).send({
+        success: true,
+        event,
+        message: "Collaborator List has been fetched successfully.",
+      });
+      
+  } catch (error) {
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong while fetching SubCollaborator List. Try again After sometime",
       error,
     });
   }
