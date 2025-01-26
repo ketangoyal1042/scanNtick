@@ -12,30 +12,29 @@ import { toast } from "react-toastify";
 import { ArrowLeft, Calendar, Clock, MapPin, Share2 } from "lucide-react";
 import TicketGenerateFromEvent from "@/components/forms/TicketGenerateFromEvent";
 import { GetFormatDateTime } from "@/components/utils/conversions";
+import AddCollaboratorForm from "@/components/forms/AddCollaboratorForm";
+import CollaboratorList from "@/components/events/collaboratos/CollaboratorList";
 
 const EventPage = () => {
   const router = useRouter();
-  // const [, setActiveTab] = useState(0);
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [openTicketModal, setOpenTicketModal] = useState(false);
+  const [openSubAdminModal, setOpenSubAdminModal] = useState(false);
 
   const { eventId } = router.query;
   const [event, setEvent] = useState(null);
 
   const getEvent = async () => {
     try {
-      console.log("Fetching event with ID:", eventId);
       const response = await getEventData({ event_id: eventId });
       if (response.success) {
         setEvent(response.event);
-
       }
     } catch (error) {
-      toast("Something went wrong. Please try again." + error.message);
+      toast.error("Something went wrong. Please try again." + error.message);
     }
   };
-
 
   useEffect(() => {
     if (router.isReady && eventId) {
@@ -65,6 +64,9 @@ const EventPage = () => {
       </ModernWrapperModal>
       <ModernWrapperModal openModal={openTicketModal} setOpenModal={setOpenTicketModal}>
         <TicketGenerateFromEvent openModal={openTicketModal} setOpenModal={setOpenTicketModal} eventId={eventId} />
+      </ModernWrapperModal>
+      <ModernWrapperModal openModal={openSubAdminModal} setOpenModal={setOpenSubAdminModal}>
+        <AddCollaboratorForm openModal={openSubAdminModal} setOpenModal={setOpenSubAdminModal} eventId={eventId} />
       </ModernWrapperModal>
 
 
@@ -135,12 +137,19 @@ const EventPage = () => {
             <button onClick={() => setOpenTicketModal(true)} className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
               Register Now
             </button>
+            <button onClick={() => setOpenSubAdminModal(true)} className="flex-1 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors text-lg font-medium">
+              Add Collaborator
+            </button>
             <button className="p-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
               <Share2 className="h-6 w-6" />
             </button>
           </div>
         </div>
       </div>}
+
+      <div className="Collaborator-section mx-40 bg-white rounded-lg shadow-lg overflow-hidden mb-20">
+        <CollaboratorList EventId={eventId}/>
+      </div>
     </>
   );
 };
