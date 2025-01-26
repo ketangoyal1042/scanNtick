@@ -104,3 +104,22 @@ export const scanQrController = async (req, res) => {
     return res.status(500).json({ success: false, message: "Error processing QR code" });
   }
 };
+
+export const ticketListController = async (req, res) => {
+  try {
+    const { email } = req.body;
+    const tickets = await ticketModal.find({ email }).populate("qrCodes eventId");;
+    console.log("email:", tickets);
+    if (!tickets) {
+      return res.status(200).json({ success: false, message: "No tickets found for this user" });
+    }
+    res.status(200).send({
+      success: true,
+      message: "Tickets fetched successfully",
+      tickets: tickets
+    });
+  } catch (error) {
+    console.error("Error in ticketListController:", error);
+    return res.status(500).json({ success: false, message: "Error fetching tickets" });
+  }
+};
