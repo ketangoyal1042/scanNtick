@@ -104,9 +104,7 @@ const transporter = mailTransporter();
 
 export const sendOtpContoller = async (req, res) => {
   const { email } = req.body;
-
   if (!email) return res.status(400).json({ error: 'Email is required.' });
-
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const hashedOtp = await bcrypt.hash(otp, 10);
   const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
@@ -139,26 +137,26 @@ export const verifyOtpContoller = async (req, res) => {
   const { email, otp } = req.body;
 
   try {
-    if (!email || !otp) return res.status(400).json({
+    if (!email || !otp) return res.status(200).json({
       success: false,
       error: 'Email and OTP are required.'
     });
 
     const otpRecord = await otpModal.findOne({ email });
-    if (!otpRecord) return res.status(400).json({
+    if (!otpRecord) return res.status(200).json({
       success: false,
       error: 'Invalid or expired OTP.'
     });
 
     const isMatch = await bcrypt.compare(otp, otpRecord.otp);
-    if (!isMatch) return res.status(400).json({
+    if (!isMatch) return res.status(200).json({
       success: false,
       error: 'Invalid OTP.'
     });
 
     // Check expiration
     if (new Date(otpRecord.expiresAt) < new Date()) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         error: 'OTP expired.'
       });
@@ -174,6 +172,9 @@ export const verifyOtpContoller = async (req, res) => {
       success: true,
       message: 'Otp verified successfully',
       verified: true,
+      user: {
+        email: email,
+      },
       token
     });
   } catch (error) {
