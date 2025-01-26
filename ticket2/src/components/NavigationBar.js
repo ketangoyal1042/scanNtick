@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFromLocalStorage } from "../../utils/storage";
+import { clearVisitor } from "@/store/slices/visitorSlice";
 // import { QrCode } from 'lucide-react';
 
 const NavigationBar = () => {
@@ -22,6 +23,7 @@ const NavigationBar = () => {
 
   const handleLogout = () => {
     dispatch(clearUser());
+    dispatch(clearVisitor());
     router.push("/");
   };
 
