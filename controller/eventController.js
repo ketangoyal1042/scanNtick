@@ -212,13 +212,26 @@ export const addCollaboratorController = async (req, res) => {
       });
     }
 
-    const user = await userModal.findOne({ email });
+    const user = await userModal.findOne({ email }).select('-password -role -createdAt -updatedAt');
     if (!user) {
       return res.status(404).send({
         success: false,
         message: "User not exist, Please ask him to create a new Account",
       });
     }
+    const IsEventAdmin = await eventModal.findOne({
+      _id: eventId,
+      userId: { $elemMatch: { $eq: user._id } },
+    });
+
+    if (IsEventAdmin) {
+      return res.status(200).send({
+        success: false,
+        message: "Admin Can not associate themselves as sub-admin.",
+        status: "ALREADY_ADDED"
+      });
+    }
+
     const event = await eventModal.findOne({
       _id: eventId,
       subAdmins: { $elemMatch: { $eq: user._id } },
@@ -232,14 +245,16 @@ export const addCollaboratorController = async (req, res) => {
           message: "Event does not exist",
         });
       }
-      await eventModal.updateOne(
+      const newEvent = await eventModal.findByIdAndUpdate(
         { _id: eventId },
-        { $addToSet: { subAdmins: user._id } }
-      );
-      res.status(404).send({
+        { $addToSet: { subAdmins: user._id } },
+        { new: true }
+      ).select('-password -role -createdAt -updatedAt');
+
+      res.status(200).send({
         success: true,
         message: "User has been successfully added from sub-admins.",
-        
+        user
       });
     } else {
       return res.status(404).send({
@@ -310,10 +325,10 @@ export const removeCollaboratorController = async (req, res) => {
 export const getsubAdminController = async (req, res) => {
   try {
       const {id: eventId} = req.params;
-      const event = await eventModal.findById(eventId).populate({path: 'subAdmins', select: '-password -role -createdAt -updatedAt'});
+      const {subAdmins} = await eventModal.findById(eventId).populate({path: 'subAdmins', select: '-password -role -createdAt -updatedAt'});
       res.status(200).send({
         success: true,
-        event,
+        subAdmins,
         message: "Collaborator List has been fetched successfully.",
       });
       

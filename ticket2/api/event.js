@@ -93,9 +93,19 @@ export const addEventCollaborator = async (payload) => {
 
 export const getEventCollaborator = async (EventId) => {
   try {
-    const response = await api.get(`api/v1/event/subCollaborator/getList/${EventId}`);
+    const response = await api.get(`/api/v1/event/subCollaborator/getList/${EventId}`);
     return response.data;
   } catch (error) {
     return new Error(error.response?.data?.message || "Something went wrong while fetching collaborator")
+  }
+}
+
+export const removeEventCollaborator = async (payload) => {
+  try {
+    const response = await api.put("/api/v1/event/subCollaborator/remove", payload);
+    return response.data;
+  } catch (error) {
+    return new Error(error.response?.data?.message || "Encounter some Error while Removing collaborator")
+    
   }
 }
