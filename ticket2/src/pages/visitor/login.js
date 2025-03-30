@@ -38,7 +38,6 @@ export default function Login() {
 
     const handleSendOtp = async (e) => {
         e.preventDefault();
-        // Add your OTP sending logic here
         const response = await sendOpt({ "email": email });
         setMessage(response?.message);
         setIsOtpSent(true);
@@ -50,7 +49,6 @@ export default function Login() {
 
     const handleVerifyOtp = async (e) => {
         e.preventDefault();
-        console.log('Verifying OTP:', otp.join(''));
         const response = await verifyOtp({ "email": email, "otp": otp.join('') });
         const { user, token, message } = response;
         dispatch(setVisitor({ user, token }));
