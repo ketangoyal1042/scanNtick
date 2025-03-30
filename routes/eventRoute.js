@@ -65,11 +65,11 @@ router.put(
 );
 
 router.get(
-    "/subCollaborator/getList/:id",
-    requireSignIn,
-    validateEventId,
-    checkEventAdministrator,
-    getsubAdminController
-)
+  "/subCollaborator/getList/:id",
+  requireSignIn,
+  validateEventId,
+  checkEventAdministrator,
+  getsubAdminController
+);
 
 export default router;
