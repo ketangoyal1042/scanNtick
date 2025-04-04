@@ -6,20 +6,24 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getFromLocalStorage } from "../../utils/storage";
 import { clearVisitor } from "@/store/slices/visitorSlice";
-// import { QrCode } from 'lucide-react';
+import { QrCode } from "lucide-react";
 
 const NavigationBar = () => {
+  const [userDtls, setUserDtls] = useState(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const router = useRouter();
   const dispatch = useDispatch();
-  const token = useSelector((state) => state.auth.token);
+  const { token, user } = useSelector((state) =>
+    state.auth.token ? state.auth : state.visitor
+  );
+  const dtls = useSelector((state) =>
+    state.auth.user ? state.auth.user : state.auth.visitor
+  );
+
   useEffect(() => {
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [token]);
+    setUserDtls(user);
+    setIsLoggedIn(!!token);
+  }, [dtls, token]);
 
   const handleLogout = () => {
     dispatch(clearUser());
@@ -120,7 +124,7 @@ const NavigationBar = () => {
     //             Dashboard
     //           </Link>
     //         </li>
-
+    //
     //         <li>
     //           <a
     //             href="#"
@@ -145,23 +149,34 @@ const NavigationBar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            {/* <QrCode className="h-8 w-8 text-purple-600" /> */}
+            <QrCode className="h-8 w-8 text-purple-600" />
             <span className="ml-2 text-xl font-bold text-gray-900">QRHost</span>
           </div>
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/" className="text-gray-600 hover:text-gray-900">
               Home
             </Link>
-            <Link
-              href="/dashboard"
-              className="text-gray-600 hover:text-gray-900"
-              aria-current="page"
-            >
-              Dashboard
-            </Link>
-            <Link href="/manage-events" className="text-gray-600 hover:text-gray-900">
-              Manage Events
-            </Link>
+            {console.log("DD", userDtls?.role == 0)}
+            {userDtls?.role == 0 ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="text-gray-600 hover:text-gray-900"
+                  aria-current="page"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/manage-events"
+                  className="text-gray-600 hover:text-gray-900"
+                >
+                  Manage Events
+                </Link>
+              </>
+            ) : (
+              <></>
+            )}
+
             <a href="#" className="text-gray-600 hover:text-gray-900">
               Support
             </a>

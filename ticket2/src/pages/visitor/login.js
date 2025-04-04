@@ -51,7 +51,7 @@ export default function Login() {
         e.preventDefault();
         const response = await verifyOtp({ "email": email, "otp": otp.join('') });
         const { user, token, message } = response;
-        dispatch(setVisitor({ user, token }));
+        dispatch(setVisitor({ user, token, role:1 }));
         if (response.success) {
             toast.success(message);
             router.push("/");

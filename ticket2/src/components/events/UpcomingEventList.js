@@ -1,9 +1,12 @@
 import React, { useEffect } from "react";
 import { getEventsData } from "../../../api/event";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
+
 
 const UpcomingEventList = () => {
   const [events, setEvents] = React.useState([]);
+  const router = useRouter();
   const getEvents = async () => {
     try {
       const response = await getEventsData({ event_type: 'upcoming' });
@@ -26,6 +29,7 @@ const UpcomingEventList = () => {
             <a
               href="#"
               class="flex flex-col items-center bg-white border border-purple-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-purple-100 dark:border-purple-700 dark:bg-purple-800 dark:hover:bg-purple-700"
+              onClick={() => router.push(`/event/${event._id}`)}
             >
               <img
                 class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg"
