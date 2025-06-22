@@ -123,9 +123,45 @@ export const scanQrController = async (req, res) => {
 
 export const ticketListController = async (req, res) => {
   try {
-    const { email } = req.body;
-    const tickets = await ticketModal.find({ email }).populate("qrCodes eventId");;
-    console.log("email:", tickets);
+    const { email } = req.visitor;
+    // const tickets = await ticketModal.find({ email }).populate("qrCodes eventId").lean();
+    const tickets = await ticketModal.aggregate([
+      { $match: { email } },
+      {
+        $lookup: {
+          from: "events", // collection name for events
+          localField: "eventId",
+          foreignField: "_id",
+          as: "eventDetails"
+        }
+      },
+      { $unwind: "$eventDetails" },
+      {
+        $match: {
+          "eventDetails.eventDateTime": { $gte: new Date() }
+        }
+      },
+      {
+        $lookup: {
+          from: "qrcodes", // collection name for QR codes
+          localField: "qrCodes",
+          foreignField: "_id",
+          as: "qrCodes"
+        }
+      },
+      {
+        $project: {
+          "eventDetails.admins": 0,
+          "eventDetails.subAdmins": 0,
+          "eventDetails.userId": 0,
+          "eventDetails.createdAt": 0,
+          "eventDetails.updatedAt": 0,
+          "qrCodes.isScanned":0,
+          "qrCodes.scannedAt":0,
+          "qrCodes._id":0,
+        }
+      },
+    ]);
     if (!tickets) {
       return res.status(200).json({ success: false, message: "No tickets found for this user" });
     }
