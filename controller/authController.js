@@ -48,6 +48,7 @@ export const registerController = async (req, res) => {
   }
 };
 
+// Admin/Collaborator Login
 export const loginContoller = async (req, res) => {
   try {
     const { email, password } = req.body;

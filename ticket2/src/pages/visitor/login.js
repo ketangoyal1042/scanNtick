@@ -54,7 +54,7 @@ export default function Login() {
         dispatch(setVisitor({ user, token, role:1 }));
         if (response.success) {
             toast.success(message);
-            router.push("/");
+            router.push("/visitor");
         }
         else {
             toast.error(response?.message);

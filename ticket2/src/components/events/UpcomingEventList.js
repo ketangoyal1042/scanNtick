@@ -23,7 +23,10 @@ const UpcomingEventList = () => {
   }, []);
   return (
     <div className="mx-16">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+       {
+          events.length == 0 && <h2 className="text-center">No Upcoming Events Found</h2>
+        }
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3">    
         {events?.map((event) => (
           <div>
             <a
@@ -51,6 +54,7 @@ const UpcomingEventList = () => {
             </a>
           </div>
         ))}
+        
       </div>
     </div>
   );
