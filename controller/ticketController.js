@@ -3,6 +3,7 @@ import ticketModal from "../models/ticketModal.js";
 import QrModal from "../models/QrModal.js";
 import { v4 as uuidv4 } from "uuid";
 import { mailTransporter } from "../helper/authHelper.js";
+import eventModal from "../models/eventModal.js";
 
 export const ticketGeneratorContoller = async (req, res) => {
   const { mobileNumber, email, quantity, eventId } = req.body;
@@ -19,51 +20,66 @@ export const ticketGeneratorContoller = async (req, res) => {
     });
   }
   try {
-    const qrCodes = [];
-    for (let i = 1; i <= quantity; i++) {
-      const codeId = uuidv4();
-      const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}&eventId=${eventId}`;
-      const qrCodeDataUrl = await QRcode.toDataURL(qrCodeUrl);
-      const qr = new QrModal({
-        qrCodeId: codeId,
-        qrCode: qrCodeDataUrl,
+    const eventCapacity = await eventModal.findById(eventId).select('headCapacity');
+    console.log("capecity", eventCapacity.headCapacity);
+
+    if (eventCapacity.headCapacity >= quantity) {
+      const qrCodes = [];
+      for (let i = 1; i <= quantity; i++) {
+        const codeId = uuidv4();
+        const qrCodeUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/v1/ticket/scan?codeId=${codeId}&eventId=${eventId}`;
+        const qrCodeDataUrl = await QRcode.toDataURL(qrCodeUrl);
+        const qr = new QrModal({
+          qrCodeId: codeId,
+          qrCode: qrCodeDataUrl,
+          eventId: eventId,
+        });
+        qrCodes.push(qr._id);
+        await qr.save();
+      }
+
+      // Create the ticket
+      const ticket = new ticketModal({
+        // associateId: [req.user._id],
+        phoneNumber: mobileNumber,
+        email: email,
+        qrCodes: qrCodes,
         eventId: eventId,
       });
-      qrCodes.push(qr._id);
-      await qr.save();
+      await ticket.save();
+      await eventModal.findByIdAndUpdate(
+        eventId,
+        { $set: { headCapacity: eventCapacity.headCapacity - quantity } }, // update operation
+        { new: true } // return the updated document
+      );
+      res.status(200).json({
+        message: `${quantity} QR codes generated and ticket created successfully`,
+        ticket: {
+          id: ticket._id,
+          phoneNumber: ticket.phoneNumber,
+          email: ticket.email,
+          eventId: ticket.eventId,
+          qrCodes: ticket.qrCodes,
+          createdAt: ticket.createdAt,
+        },
+      });
+      const transporter = mailTransporter();
+      const mailOptions = {
+        from: 'kushagragoyal1032@gmail.com',
+        to: email,
+        subject: 'Congratulations!! your ticket is created successfully.',
+        text: `Ticket is created successfully!! \n Ticket ID: ${ticket.id}`,
+      };
+      transporter.sendMail(mailOptions, (error) => {
+        if (error) return res.status(500).json({ error: 'Failed to send mail.' });
+        res.json({ message: 'Mail sent successfully.' });
+      });
     }
-
-    // Create the ticket
-    const ticket = new ticketModal({
-      // associateId: [req.user._id],
-      phoneNumber: mobileNumber,
-      email: email,
-      qrCodes: qrCodes,
-      eventId: eventId,
-    });
-    await ticket.save();
-    res.status(200).json({
-      message: `${quantity} QR codes generated and ticket created successfully`,
-      ticket: {
-        id: ticket._id,
-        phoneNumber: ticket.phoneNumber,
-        email: ticket.email,
-        eventId: ticket.eventId,
-        qrCodes: ticket.qrCodes,
-        createdAt: ticket.createdAt,
-      },
-    });
-    const transporter = mailTransporter();
-    const mailOptions = {
-      from: 'kushagragoyal1032@gmail.com',
-      to: email,
-      subject: 'Congratulations!! your ticket is created successfully.',
-      text: `Ticket is created successfully!! \n Ticket ID: ${ticket.id}`,
-    };
-    transporter.sendMail(mailOptions, (error) => {
-      if (error) return res.status(500).json({ error: 'Failed to send OTP.' });
-      res.json({ message: 'OTP sent successfully.' });
-    });
+    else {
+      res.status(200).json({
+        message: "event does not have this much capacity"
+      });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send({

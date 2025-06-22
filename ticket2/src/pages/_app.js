@@ -1,4 +1,5 @@
 import NavigationBar from "@/components/NavigationBar";
+import LoginPopup from "@/components/LoginPopup";
 import store from "@/store";
 import "@/styles/globals.css";
 import theme from "@/styles/theme";
@@ -20,6 +21,7 @@ export default function App({ Component, pageProps }) {
             <ToastContainer />
             <Component {...pageProps} />
           </div>
+        <LoginPopup />
         </Provider>
       </ThemeProvider>
     </>
