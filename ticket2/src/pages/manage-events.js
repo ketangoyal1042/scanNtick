@@ -74,7 +74,7 @@ const ManageEvent = () => {
         </Tabs>
       </div>
       <WrapperModal open={eventopen} setOpen={setEventOpen}>
-        <CreateEvent setOpen={setEventOpen}/>
+        <CreateEvent setOpen={setEventOpen} />
       </WrapperModal>
     </>
   );

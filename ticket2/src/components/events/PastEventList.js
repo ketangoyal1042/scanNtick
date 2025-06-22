@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { getEventsData } from "../../../api/event";
 import { useRouter } from "next/router";
+import { toast } from "react-toastify";
 
 const PastEventList = () => {
     const [events, setEvents] = React.useState([]);

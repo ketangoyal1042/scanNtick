@@ -34,6 +34,7 @@ export const eventRegisterController = async (req, res) => {
       description,
       userId,
       headCapacity,
+      remainCapacity: headCapacity,
       eventVenue,
       eventDateTime: new Date(eventDateTime),
     }).save();
@@ -324,14 +325,14 @@ export const removeCollaboratorController = async (req, res) => {
 
 export const getsubAdminController = async (req, res) => {
   try {
-      const {id: eventId} = req.params;
-      const {subAdmins} = await eventModal.findById(eventId).populate({path: 'subAdmins', select: '-password -role -createdAt -updatedAt'});
-      res.status(200).send({
-        success: true,
-        subAdmins,
-        message: "Collaborator List has been fetched successfully.",
-      });
-      
+    const { id: eventId } = req.params;
+    const { subAdmins } = await eventModal.findById(eventId).populate({ path: 'subAdmins', select: '-password -role -createdAt -updatedAt' });
+    res.status(200).send({
+      success: true,
+      subAdmins,
+      message: "Collaborator List has been fetched successfully.",
+    });
+
   } catch (error) {
     res.status(500).send({
       success: false,
