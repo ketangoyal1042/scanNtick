@@ -26,6 +26,8 @@ export const requireVisitorSignIn = async (req, res, next) => {
       process.env.JWT_SECRET
     );
     req.visitor = decode;
+    console.log("DS", req.visitor);
+    
     next();
   } catch (error) {
     console.log(error);

@@ -12,11 +12,16 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
-    const auth = store.getState().auth;
-    if (auth.token) {
-      config.headers.Authorization = `${auth.token}`;
+    try {
+      const { auth, visitor } = store.getState();
+      const token = auth?.token || visitor?.token;
+      if (token) {
+        config.headers.Authorization = `${token}`;
+      }
+      return config;
+    } catch (error) {
+      console.error("Error setting Authorization header:", error);
     }
-    return config;
   },
   (error) => {
     return Promise.reject(error);

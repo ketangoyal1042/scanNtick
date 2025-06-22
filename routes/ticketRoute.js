@@ -11,6 +11,6 @@ const router = express.Router();
 
 router.post("/generate-ticket", requireSignIn, ticketGeneratorContoller);
 router.get("/scan", requireSignIn, accociateHost, scanQrController);
-router.post("/ticketList", ticketListController);
+router.get("/ticketList", requireVisitorSignIn, ticketListController);
 
 export default router;

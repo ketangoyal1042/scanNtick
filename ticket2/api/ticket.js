@@ -11,3 +11,14 @@ export const scanQr = async ({ event_id, code_id }) => {
         throw new Error(error?.response?.data?.message || "Scan QR failed");
     }
 }
+
+export const getVisitorTickets = async () => {
+    try {
+        const response = await api.get('/api/v1/ticket/ticketList');
+        console.log(response?.tickets);
+        return response?.data;
+    } catch (error) {
+        console.log(error);
+        throw new Error(error?.response?.data?.message || "Something Went Wrong while fetching Tickets");
+    }
+}
